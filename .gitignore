@@ -25,3 +25,35 @@
 crashlytics-build.properties
 sysinfo.txt
 .DS_Store
+
+# Respaldos del editor de cartas
+tools/.respaldos/
+
+# ── Fuentes de arte: NO van al repo ──────────────────────────────────────
+# GitHub da 1 GB de LFS y 1 GB de tráfico por mes. Un PSD en capas se lo come
+# en semanas. Los fuentes viven en Drive; al repo va sólo el PNG exportado.
+*.psd
+*.psb
+*.ai
+*.tif
+*.tiff
+*.clip
+*.xcf
+*.kra
+*.sketch
+*.afphoto
+*.afdesign
+
+# Si alguien deja un fuente dentro de Assets/, Unity le genera un .meta.
+# Sin esto se commitearía el .meta de un archivo que no está: referencia rota.
+*.psd.meta
+*.psb.meta
+*.ai.meta
+*.tif.meta
+*.tiff.meta
+*.clip.meta
+*.xcf.meta
+*.kra.meta
+*.sketch.meta
+*.afphoto.meta
+*.afdesign.meta

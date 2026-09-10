@@ -1,0 +1,101 @@
+# Merliot — cómo trata Git cada tipo de archivo.
+#
+# Tres decisiones, y el motivo de cada una:
+#
+# 1. Los fuentes de arte (PSD, PSB, AI, TIFF) NO entran al repo. GitHub da 1 GB de
+#    LFS y 1 GB de tráfico por mes; con archivos en capas eso se agota en semanas.
+#    Los fuentes viven en Drive. Al repo va sólo el PNG exportado que consume Unity.
+#    Por eso están en .gitignore y no acá: no es que vayan por LFS, es que no van.
+#
+# 2. El JSON y los .cs NO van por LFS. Son la fuente de verdad del juego y hay que
+#    poder leer el diff y resolver un conflicto a mano.
+#
+# 3. Los .meta de Unity se versionan siempre. Si se ignoran, se rompen todas las
+#    referencias del proyecto.
+
+* text=auto
+
+# ── Texto: diffeable, nunca LFS ──────────────────────────────────────────
+*.cs             text diff=csharp
+*.json           text
+*.md             text
+*.txt            text
+*.js             text
+*.py             text
+*.html           text
+*.css            text
+*.asmdef         text
+*.asmref         text
+*.shader         text
+*.hlsl           text
+*.cginc          text
+*.uss            text
+*.uxml           text
+*.svg            text
+*.inputactions   text
+
+# El proyecto está en Force Text (m_SerializationMode: 2), así que todo esto
+# es YAML y tiene que quedar legible. eol=lf para que no dependa del sistema.
+*.meta           text eol=lf
+*.unity          text eol=lf
+*.prefab         text eol=lf
+*.asset          text eol=lf
+*.mat            text eol=lf
+*.anim           text eol=lf
+*.controller     text eol=lf
+*.overrideController text eol=lf
+*.physicMaterial text eol=lf
+*.physicsMaterial2D  text eol=lf
+*.mask           text eol=lf
+*.playable       text eol=lf
+*.signal         text eol=lf
+*.guiskin        text eol=lf
+*.fontsettings   text eol=lf
+*.scenetemplate  text eol=lf
+*.lighting       text eol=lf
+*.terrainlayer   text eol=lf
+*.spriteatlas    text eol=lf
+*.spriteatlasv2  text eol=lf
+
+# ── Binarios: por LFS ────────────────────────────────────────────────────
+# El PNG es el formato de entrega del arte: lo exporta el ilustrador y lo lee
+# Unity. Los demás están para que, cuando aparezcan, no engorden el repo para
+# siempre — un binario que entra sin LFS ya no se saca de la historia.
+
+# Imágenes
+*.png   filter=lfs diff=lfs merge=lfs -text
+*.jpg   filter=lfs diff=lfs merge=lfs -text
+*.jpeg  filter=lfs diff=lfs merge=lfs -text
+*.gif   filter=lfs diff=lfs merge=lfs -text
+*.bmp   filter=lfs diff=lfs merge=lfs -text
+*.tga   filter=lfs diff=lfs merge=lfs -text
+*.exr   filter=lfs diff=lfs merge=lfs -text
+*.hdr   filter=lfs diff=lfs merge=lfs -text
+*.ico   filter=lfs diff=lfs merge=lfs -text
+
+# Audio
+*.wav   filter=lfs diff=lfs merge=lfs -text
+*.mp3   filter=lfs diff=lfs merge=lfs -text
+*.ogg   filter=lfs diff=lfs merge=lfs -text
+*.aif   filter=lfs diff=lfs merge=lfs -text
+*.aiff  filter=lfs diff=lfs merge=lfs -text
+
+# Tipografías
+*.ttf   filter=lfs diff=lfs merge=lfs -text
+*.otf   filter=lfs diff=lfs merge=lfs -text
+
+# Video
+*.mp4   filter=lfs diff=lfs merge=lfs -text
+*.mov   filter=lfs diff=lfs merge=lfs -text
+*.webm  filter=lfs diff=lfs merge=lfs -text
+
+# Binarios compilados y comprimidos
+*.dll    filter=lfs diff=lfs merge=lfs -text
+*.dylib  filter=lfs diff=lfs merge=lfs -text
+*.so     filter=lfs diff=lfs merge=lfs -text
+*.a      filter=lfs diff=lfs merge=lfs -text
+*.bundle filter=lfs diff=lfs merge=lfs -text
+*.zip    filter=lfs diff=lfs merge=lfs -text
+*.pdf    filter=lfs diff=lfs merge=lfs -text
+
+# Los .meta son texto aunque acompañen a un binario: la regla de arriba manda.
