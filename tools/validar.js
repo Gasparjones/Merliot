@@ -31,7 +31,7 @@ for (const c of d.cartas) {
       errores.push(`${c.nombre}: banda fuera de rango ${b.desde}-${b.hasta}`);
     if (b.porCadaRaza && !razas.has(b.porCadaRaza))
       errores.push(`${c.nombre}: porCadaRaza desconocida "${b.porCadaRaza}"`);
-    if (!b.produce && !b.cristales && !b.cura)
+    if (!b.produce && !b.cristales && !b.cura && !b.roba)
       errores.push(`${c.nombre}: banda ${b.desde}-${b.hasta} no produce nada`);
   }
 }

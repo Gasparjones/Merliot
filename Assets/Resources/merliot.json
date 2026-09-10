@@ -1,5 +1,5 @@
 {
-  "version": "0.2",
+  "version": "0.3",
   "recursos": [
     {
       "id": "vigor",
@@ -52,13 +52,51 @@
       "nombre": "Zíngaru"
     }
   ],
+  "mazoInicial": [
+    {
+      "carta": "Pupilo de la abadía",
+      "copias": 3
+    },
+    {
+      "carta": "Muchacho karzov",
+      "copias": 3
+    },
+    {
+      "carta": "Cría de aven",
+      "copias": 2
+    },
+    {
+      "carta": "Zorro del sendero",
+      "copias": 2
+    },
+    {
+      "carta": "Granjero Karzov",
+      "copias": 2
+    },
+    {
+      "carta": "Segador karzov",
+      "copias": 2
+    },
+    {
+      "carta": "Guardia morza",
+      "copias": 1
+    },
+    {
+      "carta": "Ración de camino",
+      "copias": 2
+    },
+    {
+      "carta": "Silbato del celador",
+      "copias": 1
+    }
+  ],
   "cartas": [
     {
       "id": "pupilo-de-la-abad-a",
       "nombre": "Pupilo de la abadía",
       "tipo": "perm",
       "copias": 3,
-      "costoCristales": 1,
+      "costoCristales": 2,
       "texto": "Todavía no sabe nada, pero está.",
       "raza": "morza",
       "vida": 3,
@@ -77,7 +115,7 @@
       "nombre": "Muchacho karzov",
       "tipo": "perm",
       "copias": 3,
-      "costoCristales": 1,
+      "costoCristales": 2,
       "texto": "Carga bolsas desde los ocho años.",
       "raza": "karzov",
       "vida": 4,
@@ -96,7 +134,7 @@
       "nombre": "Cría de aven",
       "tipo": "perm",
       "copias": 3,
-      "costoCristales": 1,
+      "costoCristales": 2,
       "texto": "Copia sin entender, pero copia bien.",
       "raza": "aven",
       "vida": 2,
@@ -115,7 +153,7 @@
       "nombre": "Zorro del sendero",
       "tipo": "perm",
       "copias": 3,
-      "costoCristales": 1,
+      "costoCristales": 2,
       "texto": "No es de nadie y viene igual.",
       "raza": "muflon",
       "vida": 3,
@@ -143,8 +181,8 @@
           "desde": 2,
           "hasta": 6,
           "produce": {
-            "saber": 1,
-            "vigor": 1
+            "vigor": 1,
+            "saber": 1
           }
         }
       ]
@@ -163,8 +201,8 @@
           "desde": 7,
           "hasta": 12,
           "produce": {
-            "temple": 1,
-            "vigor": 1
+            "vigor": 1,
+            "temple": 1
           }
         }
       ]
@@ -323,8 +361,8 @@
           "desde": 10,
           "hasta": 12,
           "produce": {
-            "destreza": 1,
-            "vigor": 3
+            "vigor": 3,
+            "destreza": 1
           }
         }
       ]
@@ -350,8 +388,8 @@
           "desde": 11,
           "hasta": 12,
           "produce": {
-            "temple": 1,
-            "vigor": 2
+            "vigor": 2,
+            "temple": 1
           }
         }
       ]
@@ -377,8 +415,8 @@
           "desde": 7,
           "hasta": 9,
           "produce": {
-            "saber": 1,
-            "temple": 1
+            "temple": 1,
+            "saber": 1
           }
         }
       ]
@@ -404,9 +442,9 @@
           "desde": 8,
           "hasta": 10,
           "produce": {
-            "destreza": 1,
             "saber": 1
-          }
+          },
+          "roba": 1
         },
         {
           "desde": 11,
@@ -436,8 +474,8 @@
           "desde": 9,
           "hasta": 12,
           "produce": {
-            "destreza": 1,
-            "vigor": 1
+            "vigor": 1,
+            "destreza": 1
           }
         }
       ]
@@ -455,8 +493,8 @@
           "desde": 4,
           "hasta": 8,
           "produce": {
-            "saber": 1,
-            "temple": 1
+            "temple": 1,
+            "saber": 1
           }
         },
         {
@@ -545,6 +583,43 @@
             "temple": 1
           },
           "porCadaRaza": "zingaru"
+        }
+      ]
+    },
+    {
+      "id": "archivista-aven",
+      "nombre": "Archivista aven",
+      "tipo": "perm",
+      "copias": 2,
+      "costoCristales": 4,
+      "texto": "Tiene una copia de todo, en algún lado.",
+      "raza": "aven",
+      "vida": 4,
+      "bandas": [
+        {
+          "desde": 4,
+          "hasta": 8,
+          "produce": {
+            "saber": 1
+          },
+          "roba": 1
+        }
+      ]
+    },
+    {
+      "id": "copista-morza",
+      "nombre": "Copista morza",
+      "tipo": "perm",
+      "copias": 2,
+      "costoCristales": 3,
+      "texto": "Escribe de noche, a la luz de la vela.",
+      "raza": "morza",
+      "vida": 3,
+      "bandas": [
+        {
+          "desde": 6,
+          "hasta": 10,
+          "roba": 1
         }
       ]
     },
@@ -722,9 +797,9 @@
           "desde": 3,
           "hasta": 9,
           "produce": {
+            "temple": 1,
             "destreza": 1,
-            "saber": 1,
-            "temple": 1
+            "saber": 1
           }
         }
       ]
@@ -887,6 +962,16 @@
       "efectoTexto": "Las cartas de un solo uso te cuestan 1 {cristal} menos."
     },
     {
+      "id": "tintero-sin-fondo",
+      "nombre": "Tintero sin fondo",
+      "tipo": "amuleto",
+      "copias": 1,
+      "costoCristales": 5,
+      "texto": "Nunca se acaba, y eso incomoda a algunos.",
+      "pasiva": "tintero",
+      "efectoTexto": "Podés cambiar 3 de {saber} por una carta, cuantas veces quieras."
+    },
+    {
       "id": "farol-de-c-ndelo",
       "nombre": "Farol de Cándelo",
       "tipo": "amuleto",
@@ -990,8 +1075,8 @@
       "efectoTexto": "Sumás {saber}{saber}{destreza}{destreza} este turno.",
       "efecto": {
         "dar": {
-          "saber": 2,
-          "destreza": 2
+          "destreza": 2,
+          "saber": 2
         }
       }
     },
@@ -1037,12 +1122,98 @@
       "efectoTexto": "No hace nada. Pesa."
     }
   ],
+  "sitios": [
+    {
+      "id": "casa-del-celador",
+      "nombre": "Casa del celador",
+      "texto": "Un muflón viejo te deja mirar lo que tiene anotado.",
+      "trueque": {
+        "costo": {
+          "saber": 3
+        },
+        "cristales": 0,
+        "roba": 1,
+        "cura": 0,
+        "texto": "consultar sus papeles"
+      }
+    },
+    {
+      "id": "piedra-de-los-nombres",
+      "nombre": "Piedra de los nombres",
+      "texto": "Están todos los que pasaron por acá.",
+      "trueque": {
+        "costo": {
+          "saber": 2
+        },
+        "cristales": 0,
+        "roba": 1,
+        "cura": 0,
+        "texto": "leer un nombre más"
+      }
+    },
+    {
+      "id": "carromato-muscari",
+      "nombre": "Carromato muscari",
+      "texto": "Trae cosas que no debería tener, y las cambia por cristal.",
+      "trueque": {
+        "costo": null,
+        "cristales": 3,
+        "roba": 1,
+        "cura": 0,
+        "texto": "comprarle algo"
+      }
+    },
+    {
+      "id": "fog-n-de-los-karzov",
+      "nombre": "Fogón de los Karzov",
+      "texto": "Se sientan a comer y no preguntan nada.",
+      "trueque": {
+        "costo": {
+          "temple": 3
+        },
+        "cristales": 0,
+        "roba": 0,
+        "cura": 3,
+        "texto": "sentarte un rato"
+      }
+    }
+  ],
   "criaturas": [
+    {
+      "id": "brote-suelto",
+      "nombre": "Brote suelto",
+      "vida": 3,
+      "texto": "Chiquito y torcido. Todavía no sabe hacer mucho.",
+      "bandas": [
+        {
+          "desde": 5,
+          "hasta": 8,
+          "efecto": {
+            "dmg": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "cachorro-de-la-jaur-a",
+      "nombre": "Cachorro de la jauría",
+      "vida": 3,
+      "texto": "Se adelantó al resto y no mide.",
+      "bandas": [
+        {
+          "desde": 6,
+          "hasta": 9,
+          "efecto": {
+            "dmgFondo": 1
+          }
+        }
+      ]
+    },
     {
       "id": "broten-mayor",
       "nombre": "Broten mayor",
+      "vida": 4,
       "texto": "Salió de una semilla que nadie plantó y creció torcido.",
-      "vida": 5,
       "bandas": [
         {
           "desde": 3,
@@ -1063,8 +1234,8 @@
     {
       "id": "jaur-a-desertora",
       "nombre": "Jauría desertora",
+      "vida": 6,
       "texto": "Muflones que dejaron el oficio y ahora cobran peaje.",
-      "vida": 7,
       "bandas": [
         {
           "desde": 2,
@@ -1085,8 +1256,8 @@
     {
       "id": "alfa-de-la-jaur-a",
       "nombre": "Alfa de la jauría",
+      "vida": 6,
       "texto": "Es la que decide cuándo atacan.",
-      "vida": 8,
       "bandas": [
         {
           "desde": 4,
@@ -1107,12 +1278,12 @@
     {
       "id": "lengua-de-fuego",
       "nombre": "Lengua de fuego",
-      "texto": "El incendio dejó de ser una herramienta.",
       "vida": 7,
+      "texto": "El incendio dejó de ser una herramienta.",
       "bandas": [
         {
           "desde": 2,
-          "hasta": 6,
+          "hasta": 4,
           "efecto": {
             "dmgTodos": 1
           }
@@ -1129,8 +1300,8 @@
     {
       "id": "los-que-quedaron",
       "nombre": "Los que quedaron",
+      "vida": 8,
       "texto": "Familiares de los Urmond, traídos de vuelta a medias.",
-      "vida": 11,
       "bandas": [
         {
           "desde": 3,
@@ -1159,8 +1330,8 @@
     {
       "id": "cosa-de-la-sombra",
       "nombre": "Cosa de la sombra",
+      "vida": 7,
       "texto": "No tiene forma, pero tiene intención.",
-      "vida": 9,
       "bandas": [
         {
           "desde": 2,
@@ -1190,11 +1361,12 @@
     {
       "id": "nido-de-roten-feeds",
       "nombre": "Nido de Roten Feeds",
-      "texto": "Semillas abandonadas que crecieron mal. Mientras esté, no para.",
       "costo": {
-        "destreza": 3,
+        "destreza": 2,
         "saber": 2
       },
+      "descuento": null,
+      "texto": "Semillas abandonadas que crecieron mal. Mientras esté, no para.",
       "bandas": [
         {
           "desde": 7,
@@ -1208,17 +1380,18 @@
     {
       "id": "cord-n-desbordado",
       "nombre": "Cordón desbordado",
-      "texto": "La zanja que abrieron los Karzov ya no alcanza.",
       "costo": {
-        "temple": 3,
-        "vigor": 2
+        "vigor": 2,
+        "temple": 3
       },
+      "descuento": null,
+      "texto": "La zanja que abrieron los Karzov ya no alcanza.",
       "bandas": [
         {
           "desde": 5,
           "hasta": 7,
           "efecto": {
-            "dmgTodos": 1
+            "brota": 1
           }
         }
       ]
@@ -1226,11 +1399,16 @@
     {
       "id": "ventisca-sin-fin",
       "nombre": "Ventisca sin fin",
-      "texto": "No se pelea contra esto. Se busca dónde esconderse.",
       "costo": {
-        "saber": 2,
-        "temple": 4
+        "temple": 4,
+        "saber": 2
       },
+      "descuento": {
+        "marca": "canto",
+        "r": "temple",
+        "n": 1
+      },
+      "texto": "No se pelea contra esto. Se busca dónde esconderse.",
       "bandas": [
         {
           "desde": 2,
@@ -1251,11 +1429,16 @@
     {
       "id": "boca-de-la-cueva",
       "nombre": "Boca de la cueva",
-      "texto": "La sombra de la montaña empieza acá.",
       "costo": {
         "destreza": 3,
         "saber": 4
       },
+      "descuento": {
+        "marca": "muflon",
+        "r": "destreza",
+        "n": 1
+      },
+      "texto": "La sombra de la montaña empieza acá.",
       "bandas": [
         {
           "desde": 2,
@@ -1283,11 +1466,16 @@
     {
       "id": "tumba-antigua",
       "nombre": "Tumba antigua",
-      "texto": "La abrieron desde adentro y nadie la volvió a cerrar.",
       "costo": {
-        "saber": 3,
-        "temple": 1
+        "temple": 1,
+        "saber": 3
       },
+      "descuento": {
+        "marca": "nombre",
+        "r": "saber",
+        "n": 1
+      },
+      "texto": "La abrieron desde adentro y nadie la volvió a cerrar.",
       "bandas": [
         {
           "desde": 2,
@@ -1312,14 +1500,17 @@
       "id": "avalancha",
       "nombre": "Avalancha",
       "texto": "La ladera cede sin avisar.",
-      "nivel": 2,
       "bueno": false,
+      "nivel": 2,
+      "requiere": null,
+      "marcaSiFalla": null,
       "vias": [
         {
           "texto": "Salir del paso a tiempo",
           "costo": {
             "destreza": 2
-          }
+          },
+          "marca": null
         }
       ],
       "efecto": {
@@ -1331,20 +1522,24 @@
       "id": "zarza-espinosa",
       "nombre": "Zarza espinosa",
       "texto": "El sendero se cerró solo.",
-      "nivel": 1,
       "bueno": false,
+      "nivel": 1,
+      "requiere": null,
+      "marcaSiFalla": null,
       "vias": [
         {
           "texto": "Abrirla a machetazos",
           "costo": {
             "vigor": 2
-          }
+          },
+          "marca": null
         },
         {
           "texto": "Colarse entre las ramas",
           "costo": {
             "destreza": 2
-          }
+          },
+          "marca": null
         }
       ],
       "efecto": {
@@ -1356,20 +1551,24 @@
       "id": "sendero-anegado",
       "nombre": "Sendero anegado",
       "texto": "El agua parda tapó las piedras blancas.",
-      "nivel": 1,
       "bueno": false,
+      "nivel": 1,
+      "requiere": null,
+      "marcaSiFalla": null,
       "vias": [
         {
           "texto": "Saltar de piedra en piedra",
           "costo": {
             "destreza": 2
-          }
+          },
+          "marca": null
         },
         {
           "texto": "Cruzar con el agua a la cintura",
           "costo": {
             "temple": 3
-          }
+          },
+          "marca": null
         }
       ],
       "efecto": {
@@ -1381,20 +1580,24 @@
       "id": "niebla-que-confunde",
       "nombre": "Niebla que confunde",
       "texto": "Caminás quince minutos y volvés al mismo tronco.",
-      "nivel": 1,
       "bueno": false,
+      "nivel": 1,
+      "requiere": null,
+      "marcaSiFalla": null,
       "vias": [
         {
           "texto": "Orientarte por el musgo",
           "costo": {
             "saber": 2
-          }
+          },
+          "marca": null
         },
         {
           "texto": "Marcar la corteza y rehacer el camino",
           "costo": {
             "destreza": 3
-          }
+          },
+          "marca": null
         }
       ],
       "efecto": {
@@ -1406,20 +1609,24 @@
       "id": "alima-a-hambrienta",
       "nombre": "Alimaña hambrienta",
       "texto": "Los ojos primero, el resto después.",
-      "nivel": 1,
       "bueno": false,
+      "nivel": 1,
+      "requiere": null,
+      "marcaSiFalla": null,
       "vias": [
         {
           "texto": "Espantarla a los gritos",
           "costo": {
             "vigor": 2
-          }
+          },
+          "marca": null
         },
         {
           "texto": "Quedarte quieto hasta que se aburra",
           "costo": {
             "temple": 3
-          }
+          },
+          "marca": null
         }
       ],
       "efecto": {
@@ -1431,20 +1638,24 @@
       "id": "aullido-en-la-noche",
       "nombre": "Aullido en la noche",
       "texto": "No sabés a qué distancia está.",
-      "nivel": 2,
       "bueno": false,
+      "nivel": 2,
+      "requiere": null,
+      "marcaSiFalla": null,
       "vias": [
         {
           "texto": "Hacer fuego y montar guardia",
           "costo": {
             "temple": 2
-          }
+          },
+          "marca": null
         },
         {
           "texto": "Reconocer al animal",
           "costo": {
             "saber": 3
-          }
+          },
+          "marca": null
         }
       ],
       "efecto": {
@@ -1456,20 +1667,24 @@
       "id": "emboscada",
       "nombre": "Emboscada",
       "texto": "Venían siguiéndolos hace rato.",
-      "nivel": 2,
       "bueno": false,
+      "nivel": 2,
+      "requiere": null,
+      "marcaSiFalla": null,
       "vias": [
         {
           "texto": "Girarse y plantarles cara",
           "costo": {
             "vigor": 3
-          }
+          },
+          "marca": null
         },
         {
           "texto": "Romper la fila y dispersarse",
           "costo": {
             "destreza": 3
-          }
+          },
+          "marca": null
         }
       ],
       "efecto": {
@@ -1481,14 +1696,17 @@
       "id": "ventisca",
       "nombre": "Ventisca",
       "texto": "Blanco y nada más, en todas las direcciones.",
-      "nivel": 3,
       "bueno": false,
+      "nivel": 3,
+      "requiere": null,
+      "marcaSiFalla": null,
       "vias": [
         {
           "texto": "Cerrar filas y esperar",
           "costo": {
             "temple": 4
-          }
+          },
+          "marca": null
         }
       ],
       "efecto": {
@@ -1500,20 +1718,24 @@
       "id": "grieta-en-la-piedra",
       "nombre": "Grieta en la piedra",
       "texto": "Se abrió con la última helada.",
-      "nivel": 2,
       "bueno": false,
+      "nivel": 2,
+      "requiere": null,
+      "marcaSiFalla": null,
       "vias": [
         {
           "texto": "Bordearla por la cornisa",
           "costo": {
             "destreza": 2
-          }
+          },
+          "marca": null
         },
         {
           "texto": "Tirar un tronco y cruzar",
           "costo": {
             "vigor": 4
-          }
+          },
+          "marca": null
         }
       ],
       "efecto": {
@@ -1525,20 +1747,24 @@
       "id": "el-fuego-se-corre",
       "nombre": "El fuego se corre",
       "texto": "El cordón que abrieron los Karzov ya no contiene nada.",
-      "nivel": 2,
       "bueno": false,
+      "nivel": 2,
+      "requiere": null,
+      "marcaSiFalla": "arder",
       "vias": [
         {
           "texto": "Cavar una zanja nueva",
           "costo": {
             "temple": 3
-          }
+          },
+          "marca": null
         },
         {
           "texto": "Sacar a todos por el flanco",
           "costo": {
             "destreza": 3
-          }
+          },
+          "marca": null
         }
       ],
       "efecto": {
@@ -1551,20 +1777,24 @@
       "id": "se-te-vienen-encima",
       "nombre": "Se te vienen encima",
       "texto": "Salieron de los dos lados a la vez.",
-      "nivel": 3,
       "bueno": false,
+      "nivel": 3,
+      "requiere": null,
+      "marcaSiFalla": null,
       "vias": [
         {
           "texto": "Abrirse paso a la fuerza",
           "costo": {
             "vigor": 4
-          }
+          },
+          "marca": null
         },
         {
           "texto": "Formar un círculo y aguantar",
           "costo": {
             "temple": 4
-          }
+          },
+          "marca": null
         }
       ],
       "efecto": {
@@ -1577,14 +1807,17 @@
       "id": "el-nombre-olvidado",
       "nombre": "El nombre olvidado",
       "texto": "Nadie del grupo se acuerda de por qué vinieron.",
-      "nivel": 3,
       "bueno": false,
+      "nivel": 3,
+      "requiere": null,
+      "marcaSiFalla": null,
       "vias": [
         {
           "texto": "Repetir en voz alta lo que sí recordás",
           "costo": {
             "saber": 4
-          }
+          },
+          "marca": null
         }
       ],
       "efecto": {
@@ -1594,63 +1827,174 @@
       "recompensa": null
     },
     {
+      "id": "reconoc-s-la-losa",
+      "nombre": "Reconocés la losa",
+      "texto": "Es el mismo apellido que leíste en los lindes. Ahora sabés de quién era.",
+      "bueno": true,
+      "nivel": 3,
+      "requiere": "nombre",
+      "marcaSiFalla": null,
+      "vias": [
+        {
+          "texto": "Decirlo en voz alta, esta vez completo",
+          "costo": {
+            "saber": 2
+          },
+          "marca": null
+        }
+      ],
+      "efecto": null,
+      "recompensa": {
+        "cris": 4,
+        "carta": 1
+      }
+    },
+    {
+      "id": "el-mufl-n-vuelve-con-los-suyos",
+      "nombre": "El muflón vuelve con los suyos",
+      "texto": "Trajo a dos más. No dicen nada, pero se quedan cerca.",
+      "bueno": true,
+      "nivel": 2,
+      "requiere": "muflon",
+      "marcaSiFalla": null,
+      "vias": [
+        {
+          "texto": "Dejarlos venir",
+          "costo": {
+            "temple": 2
+          },
+          "marca": null
+        }
+      ],
+      "efecto": null,
+      "recompensa": {
+        "carta": 2,
+        "cura": 4
+      }
+    },
+    {
+      "id": "el-c-ntico-sirve-ac-",
+      "nombre": "El cántico sirve acá",
+      "texto": "La melodía que aprendiste calza con este lugar.",
+      "bueno": true,
+      "nivel": 2,
+      "requiere": "canto",
+      "marcaSiFalla": null,
+      "vias": [
+        {
+          "texto": "Cantarlo de nuevo",
+          "costo": {
+            "saber": 2
+          },
+          "marca": null
+        }
+      ],
+      "efecto": null,
+      "recompensa": {
+        "cura": 6,
+        "cris": 2
+      }
+    },
+    {
+      "id": "el-humo-te-sigue",
+      "nombre": "El humo te sigue",
+      "texto": "El incendio que no apagaste viene atrás tuyo.",
+      "bueno": false,
+      "nivel": 2,
+      "requiere": "arder",
+      "marcaSiFalla": null,
+      "vias": [
+        {
+          "texto": "Aguantar la tos y seguir",
+          "costo": {
+            "temple": 3
+          },
+          "marca": null
+        },
+        {
+          "texto": "Buscar aire limpio",
+          "costo": {
+            "destreza": 3
+          },
+          "marca": null
+        }
+      ],
+      "efecto": {
+        "dmgTodos": 1
+      },
+      "recompensa": null
+    },
+    {
       "id": "vendedor-errante",
       "nombre": "Vendedor errante",
       "texto": "Trae cosas que no debería tener.",
-      "nivel": 1,
       "bueno": true,
+      "nivel": 1,
+      "requiere": null,
+      "marcaSiFalla": null,
       "vias": [
         {
           "texto": "Regatearle hasta cansarlo",
           "costo": {
             "destreza": 2
-          }
+          },
+          "marca": null
         },
         {
           "texto": "Saber qué es lo que trae",
           "costo": {
             "saber": 3
-          }
+          },
+          "marca": null
         }
       ],
+      "efecto": null,
       "recompensa": {
-        "carta": 1,
-        "cris": 4
+        "cris": 4,
+        "carta": 1
       }
     },
     {
       "id": "piedra-con-inscripci-n",
       "nombre": "Piedra con inscripción",
       "texto": "Un apellido raspado, pero no del todo.",
-      "nivel": 2,
       "bueno": true,
+      "nivel": 2,
+      "requiere": null,
+      "marcaSiFalla": null,
       "vias": [
         {
           "texto": "Reconstruir el apellido",
           "costo": {
             "saber": 3
-          }
+          },
+          "marca": "nombre"
         }
       ],
+      "efecto": null,
       "recompensa": {
-        "carta": 1,
-        "cris": 3
+        "cris": 3,
+        "carta": 1
       }
     },
     {
       "id": "c-ntico-lejano",
       "nombre": "Cántico lejano",
       "texto": "Alguien canta y el frío se corre un poco.",
-      "nivel": 1,
       "bueno": true,
+      "nivel": 1,
+      "requiere": null,
+      "marcaSiFalla": null,
       "vias": [
         {
           "texto": "Reconocer la canción y seguirla",
           "costo": {
             "saber": 2
-          }
+          },
+          "marca": "canto"
         }
       ],
+      "efecto": null,
       "recompensa": {
         "cura": 4
       }
@@ -1659,32 +2003,59 @@
       "id": "mufl-n-herido",
       "nombre": "Muflón herido",
       "texto": "Lo dejaron atrás los suyos.",
-      "nivel": 1,
       "bueno": true,
+      "nivel": 1,
+      "requiere": null,
+      "marcaSiFalla": null,
       "vias": [
         {
           "texto": "Cargarlo hasta un lugar seguro",
           "costo": {
             "temple": 3
-          }
+          },
+          "marca": "muflon"
         },
         {
           "texto": "Curarle la pata",
           "costo": {
             "saber": 3
-          }
+          },
+          "marca": "muflon"
         }
       ],
+      "efecto": null,
       "recompensa": {
         "carta": 2
       }
     }
   ],
+  "marcas": [
+    {
+      "id": "nombre",
+      "nombre": "Leíste el nombre",
+      "texto": "Reconstruiste el apellido raspado de la piedra."
+    },
+    {
+      "id": "muflon",
+      "nombre": "Salvaste al muflón",
+      "texto": "Lo cargaste hasta un lugar seguro y se acuerda."
+    },
+    {
+      "id": "canto",
+      "nombre": "Aprendiste el cántico",
+      "texto": "Te quedó la melodía y sabés para qué sirve."
+    },
+    {
+      "id": "arder",
+      "nombre": "Dejaste arder",
+      "texto": "El cordón se desbordó y vos estabas en otra cosa."
+    }
+  ],
   "terrenos": [
     {
       "id": "lindes-de-urmand",
-      "nombre": "Los Lindes de Urmand",
       "etapa": 1,
+      "nombre": "Los Lindes de Urmand",
       "intro": "El obispo te mandó a buscar una semilla. Los lindes son lo primero que hay que cruzar.",
       "problema": "Algo larga criaturas sin parar. Hay que encontrar la fuente.",
       "ambiental": {
@@ -1703,26 +2074,31 @@
       "apariciones": [
         {
           "q": "criatura",
-          "n": "Broten mayor",
-          "turno": 2
+          "n": "Brote suelto",
+          "turno": 1
         },
         {
           "q": "lugar",
           "n": "Nido de Roten Feeds",
-          "turno": 4
+          "turno": 3
         },
         {
-          "q": "criatura",
-          "n": "Jauría desertora",
-          "turno": 7
+          "q": "sitio",
+          "n": "Casa del celador",
+          "turno": 3
+        },
+        {
+          "q": "sitio",
+          "n": "Carromato muscari",
+          "turno": 5
         }
       ],
       "efimerosPorTurno": 1
     },
     {
       "id": "cordon",
-      "nombre": "El Cordón de Fuego",
       "etapa": 2,
+      "nombre": "El Cordón de Fuego",
       "intro": "Los granjeros Karzov abrieron una franja quemada para frenar la peste. Se les fue de las manos.",
       "problema": "El fuego pega a toda la fila. Ir ancho acá se paga.",
       "ambiental": {
@@ -1741,8 +2117,13 @@
       "apariciones": [
         {
           "q": "criatura",
+          "n": "Cachorro de la jauría",
+          "turno": 1
+        },
+        {
+          "q": "criatura",
           "n": "Lengua de fuego",
-          "turno": 2
+          "turno": 3
         },
         {
           "q": "lugar",
@@ -1751,16 +2132,26 @@
         },
         {
           "q": "criatura",
-          "n": "Alfa de la jauría",
-          "turno": 7
+          "n": "Jauría desertora",
+          "turno": 6
+        },
+        {
+          "q": "sitio",
+          "n": "Fogón de los Karzov",
+          "turno": 3
+        },
+        {
+          "q": "sitio",
+          "n": "Carromato muscari",
+          "turno": 5
         }
       ],
       "efimerosPorTurno": 1
     },
     {
       "id": "frente",
-      "nombre": "El Frente Helado",
       "etapa": 2,
+      "nombre": "El Frente Helado",
       "intro": "La ruta corta pasa por donde el bosque se rinde. Nadie la recomienda.",
       "problema": "Poco que producir y una ventisca que no para. Se aguanta o no se sale.",
       "ambiental": {
@@ -1785,9 +2176,14 @@
       },
       "apariciones": [
         {
+          "q": "criatura",
+          "n": "Brote suelto",
+          "turno": 1
+        },
+        {
           "q": "lugar",
           "n": "Ventisca sin fin",
-          "turno": 2
+          "turno": 3
         },
         {
           "q": "criatura",
@@ -1798,14 +2194,24 @@
           "q": "criatura",
           "n": "Broten mayor",
           "turno": 8
+        },
+        {
+          "q": "sitio",
+          "n": "Casa del celador",
+          "turno": 4
+        },
+        {
+          "q": "sitio",
+          "n": "Carromato muscari",
+          "turno": 6
         }
       ],
       "efimerosPorTurno": 1
     },
     {
       "id": "tumbas",
-      "nombre": "Las Tumbas de Urmond",
       "etapa": 3,
+      "nombre": "Las Tumbas de Urmond",
       "intro": "Acá terminó la familia que fundó media academia. La semilla que llevás salió de este suelo.",
       "problema": "Lo que hay enterrado te desarma la fila y te vacía la mano.",
       "ambiental": {
@@ -1824,8 +2230,13 @@
       "apariciones": [
         {
           "q": "criatura",
+          "n": "Cachorro de la jauría",
+          "turno": 1
+        },
+        {
+          "q": "criatura",
           "n": "Los que quedaron",
-          "turno": 2
+          "turno": 3
         },
         {
           "q": "lugar",
@@ -1836,14 +2247,24 @@
           "q": "criatura",
           "n": "Cosa de la sombra",
           "turno": 7
+        },
+        {
+          "q": "sitio",
+          "n": "Piedra de los nombres",
+          "turno": 3
+        },
+        {
+          "q": "sitio",
+          "n": "Carromato muscari",
+          "turno": 6
         }
       ],
       "efimerosPorTurno": 1
     },
     {
       "id": "cuevas",
-      "nombre": "Las Cuevas de la Sombra",
       "etapa": 3,
+      "nombre": "Las Cuevas de la Sombra",
       "intro": "Por acá se entra a la montaña que no da sol. Es el camino más corto y el peor.",
       "problema": "La oscuridad te mueve la fila y larga cosas. Nada se queda quieto.",
       "ambiental": {
@@ -1861,9 +2282,14 @@
       },
       "apariciones": [
         {
+          "q": "criatura",
+          "n": "Brote suelto",
+          "turno": 1
+        },
+        {
           "q": "lugar",
           "n": "Boca de la cueva",
-          "turno": 2
+          "turno": 3
         },
         {
           "q": "criatura",
@@ -1874,15 +2300,25 @@
           "q": "criatura",
           "n": "Los que quedaron",
           "turno": 8
+        },
+        {
+          "q": "sitio",
+          "n": "Piedra de los nombres",
+          "turno": 4
+        },
+        {
+          "q": "sitio",
+          "n": "Carromato muscari",
+          "turno": 6
         }
       ],
       "efimerosPorTurno": 1
     }
   ],
   "reglas": {
-    "cristalesIniciales": 3,
-    "cristalesPorTurno": 2,
-    "manoInicial": 5,
+    "cristalesIniciales": 5,
+    "cristalesPorTurno": 1,
+    "manoInicial": 4,
     "robaPorTurno": 1,
     "limiteMano": 7,
     "slotsPorHeroe": 2,
