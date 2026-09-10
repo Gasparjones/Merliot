@@ -1,0 +1,6 @@
+{
+    "name": "Merliot",
+    "rootNamespace": "Merliot",
+    "references": ["Unity.InputSystem"],
+    "autoReferenced": true
+}

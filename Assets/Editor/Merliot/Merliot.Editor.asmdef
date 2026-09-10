@@ -1,0 +1,7 @@
+{
+    "name": "Merliot.Editor",
+    "rootNamespace": "Merliot.EditorTools",
+    "references": ["Merliot", "Unity.InputSystem"],
+    "includePlatforms": ["Editor"],
+    "autoReferenced": true
+}

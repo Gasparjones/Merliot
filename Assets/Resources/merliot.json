@@ -1,0 +1,1481 @@
+{
+  "version": "0.1",
+  "recursos": [
+    {
+      "id": "vigor",
+      "nombre": "Vigor"
+    },
+    {
+      "id": "temple",
+      "nombre": "Temple"
+    },
+    {
+      "id": "destreza",
+      "nombre": "Destreza"
+    },
+    {
+      "id": "saber",
+      "nombre": "Saber"
+    },
+    {
+      "id": "cristal",
+      "nombre": "Cristal"
+    },
+    {
+      "id": "vida",
+      "nombre": "Vida"
+    }
+  ],
+  "razas": [
+    {
+      "id": "aven",
+      "nombre": "Aven"
+    },
+    {
+      "id": "muscari",
+      "nombre": "Muscari"
+    },
+    {
+      "id": "karzov",
+      "nombre": "Karzov"
+    },
+    {
+      "id": "morza",
+      "nombre": "Morza"
+    },
+    {
+      "id": "muflon",
+      "nombre": "Muflón"
+    },
+    {
+      "id": "zingaru",
+      "nombre": "Zíngaru"
+    }
+  ],
+  "cartas": [
+    {
+      "id": "pupilo-de-la-abad-a",
+      "nombre": "Pupilo de la abadía",
+      "tipo": "perm",
+      "copias": 3,
+      "costoCristales": 1,
+      "texto": "Todavía no sabe nada, pero está.",
+      "raza": "morza",
+      "vida": 3,
+      "bandas": [
+        {
+          "desde": 2,
+          "hasta": 7,
+          "produce": {
+            "temple": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "muchacho-karzov",
+      "nombre": "Muchacho karzov",
+      "tipo": "perm",
+      "copias": 3,
+      "costoCristales": 1,
+      "texto": "Carga bolsas desde los ocho años.",
+      "raza": "karzov",
+      "vida": 4,
+      "bandas": [
+        {
+          "desde": 6,
+          "hasta": 11,
+          "produce": {
+            "vigor": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "cr-a-de-aven",
+      "nombre": "Cría de aven",
+      "tipo": "perm",
+      "copias": 3,
+      "costoCristales": 1,
+      "texto": "Copia sin entender, pero copia bien.",
+      "raza": "aven",
+      "vida": 2,
+      "bandas": [
+        {
+          "desde": 3,
+          "hasta": 9,
+          "produce": {
+            "saber": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "zorro-del-sendero",
+      "nombre": "Zorro del sendero",
+      "tipo": "perm",
+      "copias": 3,
+      "costoCristales": 1,
+      "texto": "No es de nadie y viene igual.",
+      "raza": "muflon",
+      "vida": 3,
+      "bandas": [
+        {
+          "desde": 2,
+          "hasta": 8,
+          "produce": {
+            "destreza": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "cuervo-aven",
+      "nombre": "Cuervo aven",
+      "tipo": "perm",
+      "copias": 3,
+      "costoCristales": 2,
+      "texto": "Anota lo que ve y después lo cobra.",
+      "raza": "aven",
+      "vida": 3,
+      "bandas": [
+        {
+          "desde": 2,
+          "hasta": 6,
+          "produce": {
+            "vigor": 1,
+            "saber": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "guardia-morza",
+      "nombre": "Guardia morza",
+      "tipo": "perm",
+      "copias": 3,
+      "costoCristales": 2,
+      "texto": "Custodia la vela y lo que la rodea.",
+      "raza": "morza",
+      "vida": 6,
+      "bandas": [
+        {
+          "desde": 7,
+          "hasta": 12,
+          "produce": {
+            "vigor": 1,
+            "temple": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "segador-karzov",
+      "nombre": "Segador karzov",
+      "tipo": "perm",
+      "copias": 3,
+      "costoCristales": 2,
+      "texto": "La hoz sirve para el trigo y para lo otro.",
+      "raza": "karzov",
+      "vida": 5,
+      "bandas": [
+        {
+          "desde": 3,
+          "hasta": 8,
+          "produce": {
+            "vigor": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "espadach-n-z-ngaru",
+      "nombre": "Espadachín zíngaru",
+      "tipo": "perm",
+      "copias": 3,
+      "costoCristales": 3,
+      "texto": "Aprendió peleando en ferias.",
+      "raza": "zingaru",
+      "vida": 4,
+      "bandas": [
+        {
+          "desde": 4,
+          "hasta": 9,
+          "produce": {
+            "vigor": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "cazador-mufl-n",
+      "nombre": "Cazador muflón",
+      "tipo": "perm",
+      "copias": 3,
+      "costoCristales": 3,
+      "texto": "Rastrea de día y mata de noche.",
+      "raza": "muflon",
+      "vida": 4,
+      "bandas": [
+        {
+          "desde": 6,
+          "hasta": 11,
+          "produce": {
+            "vigor": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "ariete-de-karkov",
+      "nombre": "Ariete de Karkov",
+      "tipo": "perm",
+      "copias": 2,
+      "costoCristales": 4,
+      "texto": "Lo hicieron para tirar muros abajo.",
+      "raza": "karzov",
+      "vida": 8,
+      "bandas": [
+        {
+          "desde": 2,
+          "hasta": 6,
+          "produce": {
+            "vigor": 3
+          }
+        },
+        {
+          "desde": 9,
+          "hasta": 12,
+          "produce": {
+            "vigor": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "lancero-muscari",
+      "nombre": "Lancero muscari",
+      "tipo": "perm",
+      "copias": 2,
+      "costoCristales": 5,
+      "texto": "La lanza es más vieja que la abadía.",
+      "raza": "muscari",
+      "vida": 5,
+      "bandas": [
+        {
+          "desde": 5,
+          "hasta": 9,
+          "produce": {
+            "vigor": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "granjero-karzov",
+      "nombre": "Granjero Karzov",
+      "tipo": "perm",
+      "copias": 3,
+      "costoCristales": 2,
+      "texto": "Ara, siembra y no pregunta.",
+      "raza": "karzov",
+      "vida": 5,
+      "bandas": [
+        {
+          "desde": 2,
+          "hasta": 6,
+          "produce": {
+            "vigor": 2
+          }
+        },
+        {
+          "desde": 7,
+          "hasta": 11,
+          "produce": {
+            "temple": 2
+          }
+        },
+        {
+          "desde": 12,
+          "hasta": 12,
+          "cristales": 2
+        }
+      ]
+    },
+    {
+      "id": "brenna-la-arquera",
+      "nombre": "Brenna la Arquera",
+      "tipo": "perm",
+      "copias": 2,
+      "costoCristales": 4,
+      "texto": "Tira desde lejos y no le gusta que se le acerquen.",
+      "raza": "zingaru",
+      "vida": 4,
+      "bandas": [
+        {
+          "desde": 4,
+          "hasta": 6,
+          "produce": {
+            "vigor": 2
+          }
+        },
+        {
+          "desde": 10,
+          "hasta": 12,
+          "produce": {
+            "vigor": 3,
+            "destreza": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "ordo-celador-mufl-n",
+      "nombre": "Ordo, celador muflón",
+      "tipo": "perm",
+      "copias": 2,
+      "costoCristales": 4,
+      "texto": "Se planta adelante y aguanta lo que venga.",
+      "raza": "muflon",
+      "vida": 9,
+      "bandas": [
+        {
+          "desde": 5,
+          "hasta": 8,
+          "produce": {
+            "temple": 2
+          }
+        },
+        {
+          "desde": 11,
+          "hasta": 12,
+          "produce": {
+            "vigor": 2,
+            "temple": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "hermano-oleg",
+      "nombre": "Hermano Oleg",
+      "tipo": "perm",
+      "copias": 3,
+      "costoCristales": 3,
+      "texto": "Reza cuando todo sale mal.",
+      "raza": "morza",
+      "vida": 4,
+      "bandas": [
+        {
+          "desde": 2,
+          "hasta": 4,
+          "produce": {
+            "saber": 2
+          }
+        },
+        {
+          "desde": 7,
+          "hasta": 9,
+          "produce": {
+            "saber": 1,
+            "temple": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "escriba-aven",
+      "nombre": "Escriba aven",
+      "tipo": "perm",
+      "copias": 2,
+      "costoCristales": 4,
+      "texto": "Escribe con tinta de calamar y lee lo que otros no.",
+      "raza": "aven",
+      "vida": 3,
+      "bandas": [
+        {
+          "desde": 3,
+          "hasta": 6,
+          "produce": {
+            "saber": 2
+          }
+        },
+        {
+          "desde": 8,
+          "hasta": 10,
+          "produce": {
+            "saber": 1,
+            "destreza": 1
+          }
+        },
+        {
+          "desde": 11,
+          "hasta": 12,
+          "cristales": 2
+        }
+      ]
+    },
+    {
+      "id": "rastreador-mufl-n",
+      "nombre": "Rastreador muflón",
+      "tipo": "perm",
+      "copias": 3,
+      "costoCristales": 3,
+      "texto": "Conoce los senderos que no están dibujados.",
+      "raza": "muflon",
+      "vida": 4,
+      "bandas": [
+        {
+          "desde": 2,
+          "hasta": 5,
+          "produce": {
+            "destreza": 2
+          }
+        },
+        {
+          "desde": 9,
+          "hasta": 12,
+          "produce": {
+            "destreza": 1,
+            "vigor": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "hoguera-de-c-ndelo",
+      "nombre": "Hoguera de Cándelo",
+      "tipo": "perm",
+      "copias": 2,
+      "costoCristales": 3,
+      "texto": "Mientras arda, nadie se pierde del todo.",
+      "vida": 7,
+      "bandas": [
+        {
+          "desde": 4,
+          "hasta": 8,
+          "produce": {
+            "temple": 1,
+            "saber": 1
+          }
+        },
+        {
+          "desde": 2,
+          "hasta": 3,
+          "cristales": 1
+        }
+      ]
+    },
+    {
+      "id": "errante-muscari",
+      "nombre": "Errante muscari",
+      "tipo": "perm",
+      "copias": 2,
+      "costoCristales": 4,
+      "texto": "Vino de lejos y no dice a qué.",
+      "raza": "muscari",
+      "vida": 4,
+      "bandas": [
+        {
+          "desde": 2,
+          "hasta": 5,
+          "cristales": 1
+        },
+        {
+          "desde": 9,
+          "hasta": 12,
+          "produce": {
+            "saber": 2,
+            "destreza": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "obispo-muscari",
+      "nombre": "Obispo muscari",
+      "tipo": "perm",
+      "copias": 1,
+      "costoCristales": 6,
+      "texto": "Su cabeza retorcida termina en puntas y sus ojos están vacíos.",
+      "raza": "muscari",
+      "vida": 6,
+      "bandas": [
+        {
+          "desde": 6,
+          "hasta": 9,
+          "cristales": 2
+        }
+      ]
+    },
+    {
+      "id": "capataz-karzov",
+      "nombre": "Capataz Karzov",
+      "tipo": "perm",
+      "copias": 2,
+      "costoCristales": 4,
+      "texto": "Grita poco y todos lo escuchan.",
+      "raza": "karzov",
+      "vida": 7,
+      "bandas": [
+        {
+          "desde": 4,
+          "hasta": 9,
+          "produce": {
+            "vigor": 1
+          },
+          "porCadaRaza": "karzov"
+        }
+      ]
+    },
+    {
+      "id": "cantora-zingaru",
+      "nombre": "Cantora zingaru",
+      "tipo": "perm",
+      "copias": 2,
+      "costoCristales": 4,
+      "texto": "Mientras dure la canción, el vacío no grita.",
+      "raza": "zingaru",
+      "vida": 3,
+      "bandas": [
+        {
+          "desde": 5,
+          "hasta": 10,
+          "produce": {
+            "temple": 1
+          },
+          "porCadaRaza": "zingaru"
+        }
+      ]
+    },
+    {
+      "id": "bibliotecaria-aven",
+      "nombre": "Bibliotecaria aven",
+      "tipo": "perm",
+      "copias": 2,
+      "costoCristales": 4,
+      "texto": "Sabe dónde está todo lo que se escribió.",
+      "raza": "aven",
+      "vida": 3,
+      "bandas": [
+        {
+          "desde": 3,
+          "hasta": 8,
+          "produce": {
+            "saber": 1
+          },
+          "porCadaRaza": "aven"
+        }
+      ]
+    },
+    {
+      "id": "arco-de-tejo",
+      "nombre": "Arco de tejo",
+      "tipo": "mejora",
+      "copias": 2,
+      "costoCristales": 3,
+      "texto": "Largo, pesado, y no perdona.",
+      "bandas": [
+        {
+          "desde": 10,
+          "hasta": 12,
+          "produce": {
+            "vigor": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "tomo-de-la-abad-a",
+      "nombre": "Tomo de la abadía",
+      "tipo": "mejora",
+      "copias": 2,
+      "costoCristales": 3,
+      "texto": "Copiado a mano durante ochenta años.",
+      "bandas": [
+        {
+          "desde": 9,
+          "hasta": 12,
+          "produce": {
+            "saber": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "botas-de-sendero",
+      "nombre": "Botas de sendero",
+      "tipo": "mejora",
+      "copias": 2,
+      "costoCristales": 2,
+      "texto": "Gastadas de la manera correcta.",
+      "bandas": [
+        {
+          "desde": 2,
+          "hasta": 4,
+          "produce": {
+            "destreza": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "cota-de-escamas",
+      "nombre": "Cota de escamas",
+      "tipo": "mejora",
+      "copias": 2,
+      "costoCristales": 4,
+      "texto": "Pesa, pero se agradece.",
+      "bandas": [
+        {
+          "desde": 5,
+          "hasta": 9,
+          "produce": {
+            "temple": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "tinta-de-calamar",
+      "nombre": "Tinta de calamar",
+      "tipo": "mejora",
+      "copias": 2,
+      "costoCristales": 3,
+      "texto": "Sólo los Aven saben prepararla.",
+      "soloRaza": "aven",
+      "bandas": [
+        {
+          "desde": 2,
+          "hasta": 7,
+          "produce": {
+            "saber": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "hacha-de-dos-manos",
+      "nombre": "Hacha de dos manos",
+      "tipo": "mejora",
+      "copias": 2,
+      "costoCristales": 3,
+      "texto": "Se abre camino y se abre paso.",
+      "soloRaza": "karzov",
+      "bandas": [
+        {
+          "desde": 2,
+          "hasta": 8,
+          "produce": {
+            "vigor": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "vela-votiva",
+      "nombre": "Vela votiva",
+      "tipo": "mejora",
+      "copias": 2,
+      "costoCristales": 3,
+      "texto": "La luz que hicieron los hombres morsa.",
+      "soloRaza": "morza",
+      "bandas": [
+        {
+          "desde": 4,
+          "hasta": 10,
+          "produce": {
+            "temple": 2
+          },
+          "cura": 1
+        }
+      ]
+    },
+    {
+      "id": "vara-de-zahor",
+      "nombre": "Vara de zahorí",
+      "tipo": "mejora",
+      "copias": 2,
+      "costoCristales": 3,
+      "texto": "Encuentra agua, senderos y cosas peores.",
+      "soloRaza": "muflon",
+      "bandas": [
+        {
+          "desde": 2,
+          "hasta": 8,
+          "produce": {
+            "destreza": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "m-scara-de-fiesta",
+      "nombre": "Máscara de fiesta",
+      "tipo": "mejora",
+      "copias": 2,
+      "costoCristales": 3,
+      "texto": "Detrás de la máscara nadie tiene miedo.",
+      "soloRaza": "zingaru",
+      "bandas": [
+        {
+          "desde": 3,
+          "hasta": 9,
+          "produce": {
+            "temple": 1,
+            "saber": 1,
+            "destreza": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "sello-muscari",
+      "nombre": "Sello muscari",
+      "tipo": "mejora",
+      "copias": 2,
+      "costoCristales": 4,
+      "texto": "Abre puertas que no deberían abrirse.",
+      "soloRaza": "muscari",
+      "bandas": [
+        {
+          "desde": 2,
+          "hasta": 9,
+          "cristales": 1
+        }
+      ]
+    },
+    {
+      "id": "lanza-de-fresno",
+      "nombre": "Lanza de fresno",
+      "tipo": "mejora",
+      "copias": 3,
+      "costoCristales": 3,
+      "texto": "Alcanza antes de que te alcancen.",
+      "bandas": [
+        {
+          "desde": 5,
+          "hasta": 10,
+          "produce": {
+            "vigor": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "emplasto-de-savia",
+      "nombre": "Emplasto de savia",
+      "tipo": "mejora",
+      "copias": 2,
+      "costoCristales": 3,
+      "texto": "Huele horrible y funciona.",
+      "bandas": [
+        {
+          "desde": 2,
+          "hasta": 4,
+          "cura": 3
+        }
+      ]
+    },
+    {
+      "id": "muro-de-karkov",
+      "nombre": "Muro de Karkov",
+      "tipo": "perm",
+      "copias": 2,
+      "costoCristales": 4,
+      "texto": "Albañil de abadías. No hace mucho, pero no se cae.",
+      "raza": "karzov",
+      "vida": 13,
+      "bandas": [
+        {
+          "desde": 5,
+          "hasta": 9,
+          "produce": {
+            "temple": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "chispa-joven-aven",
+      "nombre": "Chispa, joven aven",
+      "tipo": "perm",
+      "copias": 2,
+      "costoCristales": 3,
+      "texto": "Lee rapidísimo y se asusta de todo.",
+      "raza": "aven",
+      "vida": 2,
+      "bandas": [
+        {
+          "desde": 4,
+          "hasta": 7,
+          "produce": {
+            "saber": 3
+          }
+        },
+        {
+          "desde": 8,
+          "hasta": 11,
+          "produce": {
+            "destreza": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "viejo-tob-as",
+      "nombre": "Viejo Tobías",
+      "tipo": "perm",
+      "copias": 2,
+      "costoCristales": 3,
+      "texto": "Sabe que este es su último viaje y lo tiene decidido.",
+      "raza": "zingaru",
+      "vida": 6,
+      "alCaer": {
+        "cris": 5
+      },
+      "bandas": [
+        {
+          "desde": 2,
+          "hasta": 7,
+          "produce": {
+            "vigor": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "hermana-vela",
+      "nombre": "Hermana Vela",
+      "tipo": "perm",
+      "copias": 2,
+      "costoCristales": 3,
+      "texto": "Se apaga para que los demás sigan viendo.",
+      "raza": "morza",
+      "vida": 3,
+      "alCaer": {
+        "curaTodos": 4
+      },
+      "bandas": [
+        {
+          "desde": 6,
+          "hasta": 9,
+          "produce": {
+            "temple": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "amuleto-muscari",
+      "nombre": "Amuleto muscari",
+      "tipo": "amuleto",
+      "copias": 1,
+      "costoCristales": 5,
+      "texto": "Retuerce la suerte, y a veces al que lo lleva.",
+      "pasiva": "dobles",
+      "efectoTexto": "Si sacás dobles, podés volver a tirar."
+    },
+    {
+      "id": "anillo-del-escriba",
+      "nombre": "Anillo del escriba",
+      "tipo": "amuleto",
+      "copias": 1,
+      "costoCristales": 5,
+      "texto": "Tinta que nunca se seca.",
+      "pasiva": "barato",
+      "efectoTexto": "Las cartas de un solo uso te cuestan 1 {cristal} menos."
+    },
+    {
+      "id": "farol-de-c-ndelo",
+      "nombre": "Farol de Cándelo",
+      "tipo": "amuleto",
+      "copias": 1,
+      "costoCristales": 4,
+      "texto": "Mientras arda, la noche no entra del todo.",
+      "pasiva": "escudo",
+      "efectoTexto": "Al empezar tu gasto, el de adelante recibe 1 de escudo gratis."
+    },
+    {
+      "id": "canto-de-v-speras",
+      "nombre": "Canto de vísperas",
+      "tipo": "uso",
+      "copias": 2,
+      "costoCristales": 3,
+      "texto": "Se los nombra uno por uno hasta que alguno responde.",
+      "efectoTexto": "Traés un héroe del cementerio a tu mano.",
+      "efecto": {
+        "revivir": 1
+      }
+    },
+    {
+      "id": "raci-n-de-camino",
+      "nombre": "Ración de camino",
+      "tipo": "uso",
+      "copias": 2,
+      "costoCristales": 1,
+      "texto": "Pan duro, queso viejo, un rato sentado.",
+      "efectoTexto": "Un héroe recupera 4 {vida}{vida}{vida}{vida}.",
+      "efecto": {
+        "cura": 4
+      }
+    },
+    {
+      "id": "antorcha",
+      "nombre": "Antorcha",
+      "tipo": "uso",
+      "copias": 2,
+      "costoCristales": 2,
+      "texto": "A veces no hay que resolverlo: hay que irse.",
+      "efectoTexto": "Sacás un evento abierto sin resolverlo. No cuenta como resuelto.",
+      "efecto": {
+        "huir": 1
+      }
+    },
+    {
+      "id": "silbato-del-celador",
+      "nombre": "Silbato del celador",
+      "tipo": "uso",
+      "copias": 2,
+      "costoCristales": 1,
+      "texto": "Dos notas cortas y alguien aparece.",
+      "efectoTexto": "Robás 2 cartas.",
+      "efecto": {
+        "robar": 2
+      }
+    },
+    {
+      "id": "rezo-de-v-speras",
+      "nombre": "Rezo de vísperas",
+      "tipo": "uso",
+      "copias": 2,
+      "costoCristales": 2,
+      "texto": "Pedís que salga lo que necesitás.",
+      "efectoTexto": "El próximo turno tirás tres dados y elegís dos.",
+      "efecto": {
+        "tresdados": 1
+      }
+    },
+    {
+      "id": "marcha-forzada",
+      "nombre": "Marcha forzada",
+      "tipo": "uso",
+      "copias": 2,
+      "costoCristales": 3,
+      "texto": "Todos empujan a la vez, sin descansar.",
+      "efectoTexto": "Avanzás 1 sobre el problema del terreno.",
+      "efecto": {
+        "nido": 1
+      }
+    },
+    {
+      "id": "refuerzo-de-la-abad-a",
+      "nombre": "Refuerzo de la abadía",
+      "tipo": "uso",
+      "copias": 2,
+      "costoCristales": 6,
+      "texto": "Mandan gente. Tarde, pero mandan.",
+      "efectoTexto": "Resolvés un evento abierto sin pagar nada. Cuenta como resuelto.",
+      "efecto": {
+        "resolver": 1
+      }
+    },
+    {
+      "id": "frasco-de-tinta",
+      "nombre": "Frasco de tinta",
+      "tipo": "uso",
+      "copias": 2,
+      "costoCristales": 3,
+      "texto": "Lo que se escribe, se entiende.",
+      "efectoTexto": "Sumás {saber}{saber}{destreza}{destreza} este turno.",
+      "efecto": {
+        "dar": {
+          "saber": 2,
+          "destreza": 2
+        }
+      }
+    },
+    {
+      "id": "fuelle-de-fragua",
+      "nombre": "Fuelle de fragua",
+      "tipo": "uso",
+      "copias": 2,
+      "costoCristales": 3,
+      "texto": "El metal cede cuando el aire empuja.",
+      "efectoTexto": "Sumás {vigor}{vigor}{temple}{temple} este turno.",
+      "efecto": {
+        "dar": {
+          "vigor": 2,
+          "temple": 2
+        }
+      }
+    }
+  ],
+  "criaturas": [
+    {
+      "id": "broten-mayor",
+      "nombre": "Broten mayor",
+      "vida": 5,
+      "texto": "Salió de una semilla que nadie plantó y creció torcido.",
+      "bandas": [
+        {
+          "desde": 3,
+          "hasta": 6,
+          "efecto": {
+            "dmg": 2
+          }
+        },
+        {
+          "desde": 9,
+          "hasta": 11,
+          "efecto": {
+            "brota": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "jaur-a-desertora",
+      "nombre": "Jauría desertora",
+      "vida": 7,
+      "texto": "Muflones que dejaron el oficio y ahora cobran peaje.",
+      "bandas": [
+        {
+          "desde": 2,
+          "hasta": 5,
+          "efecto": {
+            "dmg": 2
+          }
+        },
+        {
+          "desde": 8,
+          "hasta": 10,
+          "efecto": {
+            "dmgFondo": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "cosa-de-la-sombra",
+      "nombre": "Cosa de la sombra",
+      "vida": 9,
+      "texto": "No tiene forma, pero tiene intención.",
+      "bandas": [
+        {
+          "desde": 2,
+          "hasta": 4,
+          "efecto": {
+            "dmg": 3
+          }
+        },
+        {
+          "desde": 7,
+          "hasta": 9,
+          "efecto": {
+            "dmgTodos": 1
+          }
+        },
+        {
+          "desde": 12,
+          "hasta": 12,
+          "efecto": {
+            "cura": 4
+          }
+        }
+      ]
+    }
+  ],
+  "lugares": [
+    {
+      "id": "nido-de-roten-feeds",
+      "nombre": "Nido de Roten Feeds",
+      "costo": {
+        "destreza": 3,
+        "saber": 2
+      },
+      "texto": "Semillas abandonadas que crecieron mal. Mientras esté, no para.",
+      "bandas": [
+        {
+          "desde": 7,
+          "hasta": 8,
+          "efecto": {
+            "brota": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "tumba-antigua",
+      "nombre": "Tumba antigua",
+      "costo": {
+        "saber": 3,
+        "temple": 1
+      },
+      "texto": "La abrieron desde adentro y nadie la volvió a cerrar.",
+      "bandas": [
+        {
+          "desde": 2,
+          "hasta": 4,
+          "efecto": {
+            "rotar": 1,
+            "dmg": 2
+          }
+        },
+        {
+          "desde": 10,
+          "hasta": 11,
+          "efecto": {
+            "descartar": 1
+          }
+        }
+      ]
+    }
+  ],
+  "efimeros": [
+    {
+      "id": "avalancha",
+      "nombre": "Avalancha",
+      "texto": "La ladera cede sin avisar.",
+      "bueno": false,
+      "vias": [
+        {
+          "texto": "Salir del paso a tiempo",
+          "costo": {
+            "destreza": 2
+          }
+        }
+      ],
+      "efecto": {
+        "dmgDado": 1
+      },
+      "recompensa": null
+    },
+    {
+      "id": "zarza-espinosa",
+      "nombre": "Zarza espinosa",
+      "texto": "El sendero se cerró solo.",
+      "bueno": false,
+      "vias": [
+        {
+          "texto": "Abrirla a machetazos",
+          "costo": {
+            "vigor": 2
+          }
+        },
+        {
+          "texto": "Colarse entre las ramas",
+          "costo": {
+            "destreza": 2
+          }
+        }
+      ],
+      "efecto": {
+        "dmg": 2
+      },
+      "recompensa": null
+    },
+    {
+      "id": "sendero-anegado",
+      "nombre": "Sendero anegado",
+      "texto": "El agua parda tapó las piedras blancas.",
+      "bueno": false,
+      "vias": [
+        {
+          "texto": "Saltar de piedra en piedra",
+          "costo": {
+            "destreza": 2
+          }
+        },
+        {
+          "texto": "Cruzar con el agua a la cintura",
+          "costo": {
+            "temple": 3
+          }
+        }
+      ],
+      "efecto": {
+        "dmg": 2
+      },
+      "recompensa": null
+    },
+    {
+      "id": "niebla-que-confunde",
+      "nombre": "Niebla que confunde",
+      "texto": "Caminás quince minutos y volvés al mismo tronco.",
+      "bueno": false,
+      "vias": [
+        {
+          "texto": "Orientarte por el musgo",
+          "costo": {
+            "saber": 2
+          }
+        },
+        {
+          "texto": "Marcar la corteza y rehacer el camino",
+          "costo": {
+            "destreza": 3
+          }
+        }
+      ],
+      "efecto": {
+        "descartar": 1
+      },
+      "recompensa": null
+    },
+    {
+      "id": "alima-a-hambrienta",
+      "nombre": "Alimaña hambrienta",
+      "texto": "Los ojos primero, el resto después.",
+      "bueno": false,
+      "vias": [
+        {
+          "texto": "Espantarla a los gritos",
+          "costo": {
+            "vigor": 2
+          }
+        },
+        {
+          "texto": "Quedarte quieto hasta que se aburra",
+          "costo": {
+            "temple": 3
+          }
+        }
+      ],
+      "efecto": {
+        "dmg": 3
+      },
+      "recompensa": null
+    },
+    {
+      "id": "aullido-en-la-noche",
+      "nombre": "Aullido en la noche",
+      "texto": "No sabés a qué distancia está.",
+      "bueno": false,
+      "vias": [
+        {
+          "texto": "Hacer fuego y montar guardia",
+          "costo": {
+            "temple": 2
+          }
+        },
+        {
+          "texto": "Reconocer al animal",
+          "costo": {
+            "saber": 3
+          }
+        }
+      ],
+      "efecto": {
+        "dmgDado": 1
+      },
+      "recompensa": null
+    },
+    {
+      "id": "emboscada",
+      "nombre": "Emboscada",
+      "texto": "Venían siguiéndolos hace rato.",
+      "bueno": false,
+      "vias": [
+        {
+          "texto": "Girarse y plantarles cara",
+          "costo": {
+            "vigor": 3
+          }
+        },
+        {
+          "texto": "Romper la fila y dispersarse",
+          "costo": {
+            "destreza": 3
+          }
+        }
+      ],
+      "efecto": {
+        "dmgFondo": 4
+      },
+      "recompensa": null
+    },
+    {
+      "id": "ventisca",
+      "nombre": "Ventisca",
+      "texto": "Blanco y nada más, en todas las direcciones.",
+      "bueno": false,
+      "vias": [
+        {
+          "texto": "Cerrar filas y esperar",
+          "costo": {
+            "temple": 4
+          }
+        }
+      ],
+      "efecto": {
+        "dmgTodos": 2
+      },
+      "recompensa": null
+    },
+    {
+      "id": "grieta-en-la-piedra",
+      "nombre": "Grieta en la piedra",
+      "texto": "Se abrió con la última helada.",
+      "bueno": false,
+      "vias": [
+        {
+          "texto": "Bordearla por la cornisa",
+          "costo": {
+            "destreza": 2
+          }
+        },
+        {
+          "texto": "Tirar un tronco y cruzar",
+          "costo": {
+            "vigor": 4
+          }
+        }
+      ],
+      "efecto": {
+        "rotar": 1
+      },
+      "recompensa": null
+    },
+    {
+      "id": "vendedor-errante",
+      "nombre": "Vendedor errante",
+      "texto": "Trae cosas que no debería tener.",
+      "bueno": true,
+      "vias": [
+        {
+          "texto": "Regatearle hasta cansarlo",
+          "costo": {
+            "destreza": 2
+          }
+        },
+        {
+          "texto": "Saber qué es lo que trae",
+          "costo": {
+            "saber": 3
+          }
+        }
+      ],
+      "efecto": null,
+      "recompensa": {
+        "cris": 4,
+        "carta": 1
+      }
+    },
+    {
+      "id": "piedra-con-inscripci-n",
+      "nombre": "Piedra con inscripción",
+      "texto": "Un apellido raspado, pero no del todo.",
+      "bueno": true,
+      "vias": [
+        {
+          "texto": "Reconstruir el apellido",
+          "costo": {
+            "saber": 3
+          }
+        }
+      ],
+      "efecto": null,
+      "recompensa": {
+        "cris": 3,
+        "carta": 1
+      }
+    },
+    {
+      "id": "c-ntico-lejano",
+      "nombre": "Cántico lejano",
+      "texto": "Alguien canta y el frío se corre un poco.",
+      "bueno": true,
+      "vias": [
+        {
+          "texto": "Reconocer la canción y seguirla",
+          "costo": {
+            "saber": 2
+          }
+        }
+      ],
+      "efecto": null,
+      "recompensa": {
+        "cura": 4
+      }
+    },
+    {
+      "id": "mufl-n-herido",
+      "nombre": "Muflón herido",
+      "texto": "Lo dejaron atrás los suyos.",
+      "bueno": true,
+      "vias": [
+        {
+          "texto": "Cargarlo hasta un lugar seguro",
+          "costo": {
+            "temple": 3
+          }
+        },
+        {
+          "texto": "Curarle la pata",
+          "costo": {
+            "saber": 3
+          }
+        }
+      ],
+      "efecto": null,
+      "recompensa": {
+        "carta": 2
+      }
+    }
+  ],
+  "terrenos": [
+    {
+      "id": "lindes-de-urmand",
+      "nombre": "Los Lindes de Urmand",
+      "ambiental": {
+        "nombre": "El frío del norte",
+        "texto": "No se pelea. Se aguanta.",
+        "bandas": [
+          {
+            "desde": 2,
+            "hasta": 3,
+            "efecto": {
+              "dmg": 2
+            }
+          }
+        ]
+      },
+      "apariciones": [
+        {
+          "q": "criatura",
+          "n": "Broten mayor",
+          "turno": 2
+        },
+        {
+          "q": "lugar",
+          "n": "Nido de Roten Feeds",
+          "turno": 4
+        },
+        {
+          "q": "criatura",
+          "n": "Jauría desertora",
+          "turno": 7
+        },
+        {
+          "q": "lugar",
+          "n": "Tumba antigua",
+          "turno": 10
+        }
+      ],
+      "efimerosPorTurno": 1
+    }
+  ],
+  "reglas": {
+    "cristalesIniciales": 3,
+    "cristalesPorTurno": 2,
+    "manoInicial": 5,
+    "robaPorTurno": 1,
+    "limiteMano": 7,
+    "slotsPorHeroe": 2,
+    "amuletosMax": 2,
+    "conversionRecursos": "2 de cualquier tipo = 1 del que falte",
+    "escudo": "1 de Temple asignado a un héroe frena 1 de daño ese turno",
+    "reordenar": "1 de Destreza por lugar (gratis en preparación)"
+  }
+}
