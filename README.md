@@ -55,6 +55,20 @@ archivos que se desincronizan el primer día. Unity necesita el archivo de verda
 de `Assets/`, así que el real vive ahí y `data/merliot.json` lo apunta: **sigue habiendo
 una sola fuente de verdad** y la regla de oro del `CLAUDE.md` se mantiene.
 
+### La campaña
+
+`Partida.cs` tiene el viaje entero: las tres etapas, el interludio (descanso, cofre,
+dejar una carta atrás, elegir ruta, siguen sólo los primeros cinco), la semilla,
+las mutaciones y la rotación del mazo de efímeros. Todo sale de `merliot.json`.
+
+Dos cosas del prototipo web que acá se corrigieron, porque con la campaña se notan:
+
+- El nombre del terreno estaba fijo en el HTML, así que en la etapa 2 seguía diciendo
+  "Los Lindes de Urmand". Ahora sale de los datos.
+- Los ids de terreno del prototipo (`lindes`) no coinciden con el del JSON
+  (`lindes-de-urmand`). Se respetó el del JSON, que ya existía, y los nuevos usan
+  los del prototipo.
+
 ### El visor
 
 Abrí `Assets/Scenes/Visor.unity` y dale Play. Flechas para recorrer el mazo,

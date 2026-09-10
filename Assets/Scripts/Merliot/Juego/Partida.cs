@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Merliot
 {
-    public enum Fase { Prep, Tirar, Dobles, Gasto, Fin }
+    public enum Fase { Prep, Tirar, Dobles, Gasto, Interludio, Fin }
 
     /// Un héroe bajado a la fila. La carta es la definición del JSON y no se toca;
     /// acá vive lo que cambia durante la partida.
@@ -43,12 +43,21 @@ namespace Merliot
 
     public class Pendiente { public string de; public Efecto ef; public Enemigo quien; }
 
+    /// Lo que pasa entre dos terrenos: descansás, abrís el cofre, podés dejar
+    /// una carta atrás y elegís por dónde seguir. No se vuelve.
+    public class Interludio
+    {
+        public List<Carta> cofre = new List<Carta>();
+        public bool tomada, sacada;
+        public List<Terreno> rutas = new List<Terreno>();
+    }
+
     /// El juego entero, sin una sola referencia a Unity.
     /// Se puede correr en un test, y con la misma semilla da la misma partida.
     public class Partida
     {
         public readonly MerliotData data;
-        public readonly Terreno terreno;
+        public Terreno terreno;
         readonly Random rnd;
 
         public event Action<string> AlLoguear;
@@ -56,8 +65,11 @@ namespace Merliot
 
         public Fase fase = Fase.Prep;
         public int turno, cris, d1, d2, d3, resueltos;
-        public bool tresdados, yaRetiro, gano;
+        public int etapa = 1;
+        public bool tresdados, yaRetiro, gano, semilla;
         public string motivoFin;
+        public readonly List<string> ruta = new List<string>();
+        public Interludio interludio;
 
         public readonly List<Carta> mazo = new List<Carta>();
         public readonly List<Carta> mano = new List<Carta>();
@@ -79,12 +91,18 @@ namespace Merliot
         public int TiradaActual => fase == Fase.Gasto ? d1 + d2 : -1;
         public int UltimoTurnoDeAparicion => terreno.apariciones.Max(a => a.turno);
 
-        public Partida(MerliotData data, int semilla = 0)
+        public Partida(MerliotData data, int semillaAzar = 0)
         {
             this.data = data;
             terreno = data.terrenos[0];
-            rnd = semilla == 0 ? new Random() : new Random(semilla);
+            rnd = semillaAzar == 0 ? new Random() : new Random(semillaAzar);
         }
+
+        /// Las cartas que se reparten. La semilla y las mutaciones están en el
+        /// catálogo con copias 0: entran por la campaña, no por el mazo de salida.
+        public IEnumerable<Carta> Repartibles => data.cartas.Where(c => c.copias > 0);
+        public Carta LaSemilla => data.cartas.FirstOrDefault(c => c.id == "la-semilla");
+        public Carta LaMutacion => data.cartas.FirstOrDefault(c => c.id == "mutaci-n");
 
         int R(int n) => rnd.Next(n);
         void Log(string s) => AlLoguear?.Invoke(s);
@@ -103,8 +121,7 @@ namespace Merliot
                 for (int i = 0; i < c.copias; i++) mazo.Add(c);
             Barajar(mazo);
 
-            foreach (var e in data.efimeros) { efMazo.Add(e); efMazo.Add(e); }
-            Barajar(efMazo);
+            efMazo.AddRange(MazoEfimeros(1));
 
             cris = data.reglas.cristalesIniciales;
             Robar(data.reglas.manoInicial);
@@ -123,6 +140,7 @@ namespace Merliot
             }
             Barajar(mazo);
 
+            Log($"<b>{terreno.nombre}.</b> {terreno.intro}");
             Log("Revelás el terreno. Por ahora está quieto. <b>Salís solo: elegí con quién enfrentarlo.</b>");
             Log("<b>Antes de empezar, acomodá tu party con lo que traés de casa.</b> Todavía no se roba ni se tira.");
             Pintar();
@@ -142,9 +160,20 @@ namespace Merliot
             }
         }
 
+        /// El mazo de efímeros no crece: rota. Entran los del nivel de la etapa
+        /// y los del anterior, y salen los viejos.
+        public List<Efimero> MazoEfimeros(int nivel)
+        {
+            var m = new List<Efimero>();
+            foreach (var e in data.efimeros.Where(e => e.nivel <= nivel && e.nivel >= nivel - 1))
+            { m.Add(e); m.Add(e); }
+            Barajar(m);
+            return m;
+        }
+
         Efimero AbrirEfimero()
         {
-            if (efMazo.Count == 0) { efMazo.AddRange(data.efimeros); Barajar(efMazo); }
+            if (efMazo.Count == 0) efMazo.AddRange(MazoEfimeros(etapa));
             var e = efMazo[efMazo.Count - 1];
             efMazo.RemoveAt(efMazo.Count - 1);
             efimeros.Add(e);
@@ -717,7 +746,120 @@ namespace Merliot
 
         void RevisarVictoria()
         {
-            if (enemigos.Count == 0 && turno >= UltimoTurnoDeAparicion) Fin(true, null);
+            if (enemigos.Count > 0) return;
+            if (turno < UltimoTurnoDeAparicion) return;
+            ruta.Add(terreno.nombre);
+            if (etapa >= 3) { Fin(true, null); return; }
+            AbrirInterludio();
+        }
+
+        // ── la campaña ────────────────────────────────────────────────────────
+
+        void AbrirInterludio()
+        {
+            fase = Fase.Interludio;
+
+            var pozo = Repartibles
+                .Where(c => c.tipo != "amuleto" || !amuletos.Any(a => a.nombre == c.nombre))
+                .ToList();
+            Barajar(pozo);
+
+            interludio = new Interludio
+            {
+                cofre = pozo.Take(3).ToList(),
+                rutas = data.terrenos.Where(t => t.etapa == etapa + 1).ToList(),
+            };
+
+            if (cementerio.Count > 0)
+            {
+                Log($"Los caídos vuelven al mazo: {string.Join(", ", cementerio.Select(c => c.nombre))}.");
+                mazo.AddRange(cementerio);
+                cementerio.Clear();
+            }
+
+            foreach (var h in party) h.vida = h.VidaMax;
+
+            mazo.AddRange(descarte); descarte.Clear();
+            mazo.AddRange(mano); mano.Clear();
+            Barajar(mazo);
+
+            Log("<b>Cruzaste el terreno.</b> Descansan, se curan y abren el cofre.");
+            Pintar();
+        }
+
+        public void TomarDelCofre(int i)
+        {
+            if (fase != Fase.Interludio || interludio.tomada) return;
+            if (i < 0 || i >= interludio.cofre.Count) return;
+            var c = interludio.cofre[i];
+            mazo.Add(c);
+            interludio.tomada = true;
+            Log($"Del cofre sacás <b>{c.nombre}</b>.");
+            Pintar();
+        }
+
+        /// Adelgazar el mazo es tan valioso como engordarlo, así que se puede
+        /// dejar una carta atrás. La semilla no.
+        public void SacarDelMazo(string nombre)
+        {
+            if (fase != Fase.Interludio || interludio.sacada) return;
+            int i = mazo.FindIndex(c => c.nombre == nombre);
+            if (i < 0) return;
+            if (mazo[i] == LaSemilla) { Log("La semilla no se puede dejar atrás."); return; }
+            mazo.RemoveAt(i);
+            interludio.sacada = true;
+            Log($"Dejás atrás <b>{nombre}</b>. No lo vas a volver a ver.");
+            Pintar();
+        }
+
+        public void PartirHacia(string id)
+        {
+            if (fase != Fase.Interludio) return;
+            var t = data.terrenos.FirstOrDefault(x => x.id == id);
+            if (t == null) return;
+
+            // Siguen viaje sólo los primeros cinco: el orden que armaste para
+            // pelear también decide quién te acompaña.
+            if (party.Count > 5)
+            {
+                var quedan = party.Skip(5).ToList();
+                party.RemoveRange(5, party.Count - 5);
+                foreach (var h in quedan)
+                {
+                    if (h.mejoras.Count > 0) { mazo.AddRange(h.mejoras); h.mejoras.Clear(); }
+                    mazo.Add(h.carta);
+                }
+                Log($"Se quedan atrás: <b>{string.Join(", ", quedan.Select(h => h.Nombre))}</b>. Vuelven al mazo.");
+            }
+
+            etapa++;
+            terreno = t;
+            enemigos.Clear();
+            efimeros.Clear();
+            pendientes.Clear();
+            efMazo.Clear();
+            efMazo.AddRange(MazoEfimeros(etapa));
+
+            if (!semilla)
+            {
+                semilla = true;
+                if (LaSemilla != null) mazo.Add(LaSemilla);
+                Log("<b>Encontraste la semilla</b> entre las raíces. Va con vos y no se puede dejar.");
+            }
+            else
+            {
+                if (LaMutacion != null) mazo.Add(LaMutacion);
+                Log("<b>La semilla se mueve sola.</b> Entra una mutación a tu mazo.");
+            }
+
+            Barajar(mazo);
+            turno = 0;
+            interludio = null;
+            Log($"<b>{t.nombre}.</b> {t.intro}");
+
+            // Terminar() hace el papeleo de arranque de turno: cobra, roba y abre.
+            fase = Fase.Gasto;
+            Terminar();
         }
 
         void Fin(bool ganaste, string motivo)

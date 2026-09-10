@@ -109,6 +109,7 @@ namespace Merliot
     [Serializable] public class Efimero
     {
         public string id, nombre, texto;
+        public int nivel;                 // el mazo de efimeros rota por etapa, no crece
         public bool bueno;                // si no lo pagas, simplemente se va
         public List<Via> vias;
         public Efecto efecto;
@@ -126,6 +127,8 @@ namespace Merliot
     [Serializable] public class Terreno
     {
         public string id, nombre;
+        public int etapa;                 // 1, 2 o 3: el viaje es de ida
+        public string intro, problema;
         public Ambiental ambiental;
         public List<Aparicion> apariciones;
         public int efimerosPorTurno;

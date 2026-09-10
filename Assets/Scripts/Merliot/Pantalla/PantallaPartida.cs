@@ -16,7 +16,8 @@ namespace Merliot
         Partida P;
         readonly List<string> bitacora = new List<string>();
 
-        Text stEnPie, stTurno, stMano, stRes, stEnem;
+        Text stEnPie, stEtapa, stTurno, stMano, stRes, stEnem;
+        Text terrNombre, terrIntro, terrProblema;
         Transform cond, terr, dados, pend, rec, crisbox, acc, party, amuletos, cementerio, eventos, mano, log;
         Text rotFase, dtot, rotRec, npart, namul, ncem, rotEv, pistaFase;
         GameObject velo;
@@ -104,6 +105,7 @@ namespace Merliot
             U.Elem(titulo.gameObject).flexibleWidth = 1;
 
             stEnPie = Stat(h.transform, "en pie");
+            stEtapa = Stat(h.transform, "etapa / 3");
             stTurno = Stat(h.transform, "turno");
             stMano  = Stat(h.transform, "en mano");
             stRes   = Stat(h.transform, "resueltos");
@@ -133,9 +135,12 @@ namespace Merliot
             U.Col(c1, 0, 11);
             U.Ancho(c1, AnchoCol1);
             var cajaTerr = U.Caja(c1.transform);
-            U.Txt(cajaTerr.transform, "Los Lindes de Urmand", 15, Paleta.Tinta);
-            U.Txt(cajaTerr.transform, "Nadie los cruza de noche.", 11, Paleta.Tenue,
-                  TextAnchor.UpperLeft, FontStyle.Italic, wrap: true);
+            U.Rot(cajaTerr.transform, "El terreno");
+            terrNombre = U.Txt(cajaTerr.transform, "", 15, Paleta.Tinta, TextAnchor.UpperLeft, wrap: true);
+            terrIntro = U.Txt(cajaTerr.transform, "", 11, Paleta.Tenue,
+                              TextAnchor.UpperLeft, FontStyle.Italic, wrap: true);
+            terrProblema = U.Txt(cajaTerr.transform, "", 11, Paleta.Rojo,
+                                 TextAnchor.UpperLeft, FontStyle.Normal, wrap: true);
             cond = U.Nodo("cond", cajaTerr.transform).transform;
             U.Col(cond.gameObject, 0, 4);
             terr = U.Nodo("terr", c1.transform).transform;
@@ -240,15 +245,35 @@ namespace Merliot
             velo = U.Nodo("ov", padre);
             U.Estirar(velo.GetComponent<RectTransform>());
             U.Fondo(velo, Paleta.Velo);
-            var col = U.Col(velo, 0, 0);
+            var col = U.Col(velo, 40, 0);
             col.childAlignment = TextAnchor.MiddleCenter;
             col.childForceExpandWidth = false;
 
-            var m = U.Nodo("mod", velo.transform);
+            // el interludio no entra en una pantalla, así que el modal scrollea
+            var scrollGo = U.Nodo("scroll", velo.transform);
+            U.Ancho(scrollGo, 900);
+            U.Elem(scrollGo).flexibleHeight = 1;
+            var scroll = scrollGo.AddComponent<ScrollRect>();
+            scroll.horizontal = false;
+            scroll.scrollSensitivity = 28;
+            scrollGo.AddComponent<RectMask2D>();
+
+            var viewport = U.Nodo("viewport", scrollGo.transform);
+            U.Estirar(viewport.GetComponent<RectTransform>());
+            scroll.viewport = viewport.GetComponent<RectTransform>();
+
+            var m = U.Nodo("mod", viewport.transform);
             U.Fondo(m, Paleta.Caja);
             U.Borde(m, Paleta.Borde);
             U.Col(m, 28, 12);
-            U.Ancho(m, 520);
+            var rt = m.GetComponent<RectTransform>();
+            rt.anchorMin = new Vector2(0.5f, 1);
+            rt.anchorMax = new Vector2(0.5f, 1);
+            rt.pivot = new Vector2(0.5f, 1);
+            rt.sizeDelta = new Vector2(900, 0);
+            m.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            scroll.content = rt;
+
             modal = m.transform;
             velo.SetActive(false);
         }
@@ -257,6 +282,7 @@ namespace Merliot
 
         void Pintar()
         {
+            if (P.fase == Fase.Interludio) { PintarInterludio(); return; }
             int v = P.TiradaActual;
 
             PintarStats();
@@ -281,6 +307,7 @@ namespace Merliot
         {
             stEnPie.text = P.party.Count.ToString();
             stEnPie.color = P.party.Count <= 1 ? Paleta.Rojo : Paleta.Tinta;
+            stEtapa.text = P.etapa.ToString();
             stTurno.text = P.fase == Fase.Prep ? "—" : P.turno.ToString();
             stMano.text = P.mano.Count.ToString();
             stRes.text = P.resueltos.ToString();
@@ -290,6 +317,12 @@ namespace Merliot
 
         void PintarObjetivo()
         {
+            // El prototipo dejó el nombre del terreno fijo en el HTML, así que en la
+            // etapa 2 sigue diciendo "Los Lindes de Urmand". Acá sale de los datos.
+            terrNombre.text = P.terreno.nombre;
+            terrIntro.text = P.terreno.intro;
+            terrProblema.text = P.terreno.problema;
+
             U.Limpiar(cond);
             U.Txt(cond, "Para llevarte el cofre tenés que <b>limpiar el linde</b>:", 13, Paleta.Objetivo, wrap: true);
             foreach (var a in P.terreno.apariciones)
@@ -475,6 +508,7 @@ namespace Merliot
                 Fase.Dobles => "Dobles",
                 Fase.Tirar  => "Tirada de producción",
                 Fase.Gasto  => "Gastar lo que salió",
+                Fase.Interludio => "Al otro lado",
                 _           => "Se terminó",
             }).ToUpperInvariant();
 
@@ -740,14 +774,7 @@ namespace Merliot
 
                 Franja(cd.transform, Paleta.Franja(c.tipo));
 
-                string tipo = c.tipo switch
-                {
-                    "perm"    => (string.IsNullOrEmpty(c.raza) ? "" : P.NombreDeRaza(c.raza) + " · ") + $"{c.vida} de vida",
-                    "amuleto" => "amuleto · pasiva",
-                    "mejora"  => "mejora · va sobre un héroe",
-                    _         => "un solo uso",
-                };
-                U.Micro(cd.transform, tipo);
+                U.Micro(cd.transform, EtiquetaDeTipo(c));
                 U.Txt(cd.transform, c.nombre, 14, Paleta.Tinta, TextAnchor.UpperLeft, wrap: true);
 
                 var cuerpo = U.Nodo("cx", cd.transform);
@@ -787,16 +814,142 @@ namespace Merliot
             velo.SetActive(P.Terminada);
             if (!P.Terminada) return;
             U.Limpiar(modal);
-            U.Txt(modal, P.gano ? "El cofre es tuyo" : "No saliste de los Lindes",
+            U.Txt(modal, P.gano ? "Plantaste la semilla" : "Ahí terminó el viaje",
                   26, Paleta.Tinta, TextAnchor.MiddleCenter, wrap: true);
             U.Txt(modal,
                   P.gano
-                    ? $"Desarmaste el nido y resolviste {P.resueltos} eventos en {P.turno} turnos, " +
-                      $"con {P.party.Count} en pie."
+                    ? $"Cruzaste {string.Join(", ", P.ruta)} y llegaste con {P.party.Count} en pie."
                     : (P.motivoFin ?? "No quedó nadie en pie.") + $" Turno {P.turno}.",
                   15, Paleta.TextoModal, TextAnchor.MiddleCenter, FontStyle.Italic, wrap: true);
             U.Btn(modal, "Otra vez", Reiniciar, true, Paleta.Noche, Paleta.Oro, 13, 38, solido: true);
         }
+
+        // ══ el interludio ═════════════════════════════════════════════════════
+
+        void PintarInterludio()
+        {
+            var I = P.interludio;
+            velo.SetActive(true);
+            U.Limpiar(modal);
+
+            U.Txt(modal, "Al otro lado", 26, Paleta.Tinta, TextAnchor.MiddleCenter, wrap: true);
+            U.Txt(modal, $"Cruzaste <b>{P.terreno.nombre}</b>. Descansan, se curan, " +
+                         "y los caídos vuelven al mazo.",
+                  14, Paleta.TextoModal, TextAnchor.MiddleCenter, FontStyle.Italic, wrap: true);
+
+            Seccion("El cofre · llevate una");
+            var cofre = U.Nodo("cofre", modal);
+            U.Grilla(cofre, new Vector2(268, 150), 8);
+            U.Alto(cofre, 150);
+            for (int i = 0; i < I.cofre.Count; i++)
+            {
+                int idx = i;
+                TarjetaDeCofre(cofre.transform, I.cofre[i], !I.tomada, () => P.TomarDelCofre(idx));
+            }
+
+            Seccion(I.sacada ? "Ya dejaste una atrás" : "Dejá una carta atrás · opcional");
+            var lista = U.Nodo("lista", modal);
+            U.Grilla(lista, new Vector2(196, 22), 4);
+            var porNombre = P.mazo.GroupBy(c => c.nombre).OrderBy(g => g.Key).ToList();
+            U.Alto(lista, Mathf.Ceil(porNombre.Count / 4f) * 26);
+            foreach (var g in porNombre)
+            {
+                string nombre = g.Key;
+                var b = U.Btn(lista.transform, $"{nombre}  ×{g.Count()}",
+                              () => P.SacarDelMazo(nombre), !I.sacada, null, null, 10, 22);
+            }
+
+            if (P.party.Count > 5)
+            {
+                var aviso = U.Nodo("aviso5", modal);
+                U.Fondo(aviso, Paleta.PendFondo);
+                U.Borde(aviso, Paleta.PendBorde);
+                U.Col(aviso, 8, 2);
+                U.Txt(aviso.transform,
+                      $"Siguen viaje sólo los <b>primeros cinco</b> de la fila. " +
+                      $"Van: {string.Join(", ", P.party.Take(5).Select(h => h.Nombre))}. " +
+                      $"Se quedan: {string.Join(", ", P.party.Skip(5).Select(h => h.Nombre))}.",
+                      12, Paleta.PendEfecto, TextAnchor.UpperLeft, wrap: true);
+            }
+
+            Seccion("¿Hacia dónde? · no se vuelve");
+            var rutas = U.Nodo("rutas", modal);
+            U.Grilla(rutas, new Vector2(410, 170), 8);
+            U.Alto(rutas, 170);
+            foreach (var t in I.rutas) TarjetaDeRuta(rutas.transform, t);
+        }
+
+        void Seccion(string titulo)
+        {
+            var go = U.Nodo("rot", modal);
+            var col = U.Col(go, 0, 0);
+            col.childAlignment = TextAnchor.MiddleCenter;
+            U.Alto(go, 20);
+            U.Micro(go.transform, titulo, null, TextAnchor.MiddleCenter);
+        }
+
+        void TarjetaDeCofre(Transform padre, Carta c, bool clickeable, System.Action alTocar)
+        {
+            var go = U.Nodo("opt", padre);
+            U.Fondo(go, Paleta.Caja);
+            U.Borde(go, clickeable ? Paleta.Borde2 : Paleta.Borde);
+            U.Col(go, 10, 4);
+            Franja(go.transform, Paleta.Franja(c.tipo));
+            if (clickeable)
+            {
+                var b = go.AddComponent<Button>();
+                b.targetGraphic = go.GetComponent<Image>();
+                b.onClick.AddListener(() => alTocar());
+            }
+            else U.Comp<CanvasGroup>(go).alpha = 0.35f;
+
+            U.Micro(go.transform, EtiquetaDeTipo(c));
+            U.Txt(go.transform, c.nombre, 14, Paleta.Tinta, TextAnchor.UpperLeft, wrap: true);
+
+            var cuerpo = U.Nodo("cx", go.transform);
+            U.Col(cuerpo, 0, 3);
+            U.Elem(cuerpo).flexibleHeight = 1;
+            if (c.tipo == "perm" || c.tipo == "mejora")
+                foreach (var b in c.bandas ?? new List<Banda>()) BandaPropia(cuerpo.transform, b, -1);
+            else
+                U.Txt(cuerpo.transform, c.efectoTexto ?? c.texto, 11, Paleta.TextoCuerpo,
+                      TextAnchor.UpperLeft, wrap: true);
+
+            var pie = U.Nodo("cq", go.transform);
+            var fp = U.Fila(pie, 0, 3);
+            fp.childForceExpandWidth = false;
+            U.Alto(pie, 14);
+            for (int k = 0; k < c.costoCristales; k++) U.Pip(pie.transform, Paleta.Cristal, 10);
+        }
+
+        void TarjetaDeRuta(Transform padre, Terreno t)
+        {
+            var go = U.Nodo("ruta", padre);
+            U.Fondo(go, Paleta.Caja);
+            U.Borde(go, Paleta.Oro);
+            U.Col(go, 12, 5);
+            var b = go.AddComponent<Button>();
+            b.targetGraphic = go.GetComponent<Image>();
+            b.onClick.AddListener(() => P.PartirHacia(t.id));
+
+            U.Txt(go.transform, t.nombre, 16, Paleta.Tinta, TextAnchor.UpperLeft, wrap: true);
+            var intro = U.Txt(go.transform, t.intro, 11, Paleta.Tenue,
+                              TextAnchor.UpperLeft, FontStyle.Italic, wrap: true);
+            U.Elem(intro.gameObject).flexibleHeight = 1;
+            U.Txt(go.transform, t.problema, 11, Paleta.Rojo, TextAnchor.UpperLeft, wrap: true);
+            U.Txt(go.transform, string.Join(" · ", t.apariciones.Select(a => a.n)),
+                  10, Paleta.SlotVacio, TextAnchor.UpperLeft, wrap: true);
+        }
+
+        string EtiquetaDeTipo(Carta c) => c.tipo switch
+        {
+            "perm"    => (string.IsNullOrEmpty(c.raza) ? "" : P.NombreDeRaza(c.raza) + " · ") + $"{c.vida} de vida",
+            "amuleto" => "amuleto · pasiva",
+            "mejora"  => string.IsNullOrEmpty(c.soloRaza)
+                         ? "mejora · va sobre un héroe"
+                         : $"mejora · sólo {P.NombreDeRaza(c.soloRaza)}",
+            _         => "un solo uso",
+        };
 
         void Reiniciar()
         {

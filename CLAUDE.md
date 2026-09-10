@@ -35,6 +35,10 @@ Una `carta` tiene `tipo`: `perm` (héroe), `mejora`, `amuleto` o `uso`.
 Una `banda` es `{desde, hasta, produce}` sobre una tirada de 2d6, o sea **el rango vive entre 2 y 12**.
 `porCadaRaza` multiplica la producción por cuántos miembros de esa raza haya en la fila.
 
+Un `terreno` tiene `etapa` (1, 2 o 3), `intro` y `problema`. Un `efimero` tiene `nivel`:
+el mazo de efímeros **rota** por etapa (entran los del nivel de la etapa y los del anterior).
+`La semilla` y `Mutación` están en `cartas` con `copias: 0`: no se reparten, entran por la campaña.
+
 Recursos: `vigor` (mata criaturas), `temple` (se asigna como escudo), `destreza` (reordenar la fila),
 `saber` (desarma lugares). Se pierden al terminar el turno.
 Los `cristales` son aparte: sólo invocan, y son lo único que se acumula.
@@ -49,6 +53,8 @@ Los `cristales` son aparte: sólo invocan, y son lo único que se acumula.
    el arte se busca por id (`Arte/Cartas/{id}.png`).
 6. Debería haber algo que produzca en cada resultado del 2 al 12. Si un número queda
    vacío, ese turno el jugador no hace nada y eso se siente pésimo.
+7. Toda `aparicion` nombra una criatura o un lugar que existe.
+8. Hay al menos un terreno por etapa, y dos para elegir en la 2 y en la 3.
 
 ## Decisiones ya tomadas — no las revivas sin motivo nuevo
 

@@ -191,6 +191,115 @@ namespace Merliot.Tests
             Assert.IsFalse(p.gano);
         }
 
+        // ── la campaña ────────────────────────────────────────────────────────
+
+        /// Deja la partida con el terreno limpio y el interludio abierto.
+        Partida HastaElInterludio(int semilla = 4242, int enFila = 7)
+        {
+            var p = Nueva(semilla);
+            for (int i = 0; i < enFila; i++)
+                p.party.Add(new Heroe { carta = Heroe("H" + i, 9), vida = 4 });
+            p.Empezar();
+            p.turno = p.UltimoTurnoDeAparicion;
+            p.fase = Fase.Gasto;
+            p.enemigos.Add(new Enemigo { nombre = "Blanco", esCriatura = true, vida = 1, vidaMax = 1,
+                                         bandas = new System.Collections.Generic.List<BandaEnemiga>() });
+            p.r.vigor = 1;
+            p.Golpear(0);
+            return p;
+        }
+
+        [Test]
+        public void ElMazoDeEfimerosRotaNoCrece()
+        {
+            var p = Nueva();
+            CollectionAssert.AreEqual(new[] { 1 },
+                p.MazoEfimeros(1).Select(e => e.nivel).Distinct().OrderBy(x => x).ToArray());
+            CollectionAssert.AreEqual(new[] { 1, 2 },
+                p.MazoEfimeros(2).Select(e => e.nivel).Distinct().OrderBy(x => x).ToArray());
+            CollectionAssert.AreEqual(new[] { 2, 3 },
+                p.MazoEfimeros(3).Select(e => e.nivel).Distinct().OrderBy(x => x).ToArray(),
+                "en la etapa 3 tienen que salir los de nivel 1");
+        }
+
+        [Test]
+        public void LimpiarElTerrenoAbreElInterludio()
+        {
+            var p = HastaElInterludio();
+            Assert.AreEqual(Fase.Interludio, p.fase);
+            Assert.AreEqual(3, p.interludio.cofre.Count, "el cofre trae tres");
+            Assert.AreEqual(2, p.interludio.rutas.Count, "hay dos rutas hacia la etapa 2");
+            Assert.AreEqual(0, p.cementerio.Count, "los caídos vuelven al mazo");
+            Assert.AreEqual(0, p.mano.Count, "la mano vuelve al mazo");
+            Assert.IsTrue(p.party.All(h => h.vida == h.VidaMax), "la fila se cura entera");
+        }
+
+        [Test]
+        public void DelCofreSeLlevaUnaSolaYSeDejaUnaSola()
+        {
+            var p = HastaElInterludio();
+            int antes = p.mazo.Count;
+            p.TomarDelCofre(0);
+            p.TomarDelCofre(1);
+            Assert.AreEqual(antes + 1, p.mazo.Count, "sólo entra una del cofre");
+
+            antes = p.mazo.Count;
+            p.SacarDelMazo(p.mazo[0].nombre);
+            p.SacarDelMazo(p.mazo[0].nombre);
+            Assert.AreEqual(antes - 1, p.mazo.Count, "sólo se deja una atrás");
+        }
+
+        [Test]
+        public void PartirLlevaCincoYTraeLaSemillaPrimeroYMutacionesDespues()
+        {
+            var p = HastaElInterludio();
+            p.PartirHacia("cordon");
+
+            Assert.AreEqual(2, p.etapa);
+            Assert.AreEqual("El Cordón de Fuego", p.terreno.nombre);
+            Assert.AreEqual(5, p.party.Count, "siguen viaje sólo los primeros cinco");
+            Assert.Contains(p.LaSemilla, p.mazo, "la semilla entra al mazo");
+            Assert.IsFalse(p.mazo.Contains(p.LaMutacion), "todavía no hay mutación");
+            Assert.AreEqual(1, p.turno, "arranca el turno 1 del terreno nuevo");
+            Assert.AreEqual(Fase.Tirar, p.fase);
+
+            // la semilla no se puede dejar atrás
+            p.fase = Fase.Interludio;
+            p.interludio = new Interludio();
+            int antes = p.mazo.Count;
+            p.SacarDelMazo(p.LaSemilla.nombre);
+            Assert.AreEqual(antes, p.mazo.Count, "la semilla sigue en el mazo");
+            Assert.IsFalse(p.interludio.sacada, "y no gastó el descarte del interludio");
+        }
+
+        [Test]
+        public void CruzarLasTresEtapasGanaLaPartida()
+        {
+            var p = HastaElInterludio();
+            p.PartirHacia("cordon");
+
+            for (int etapa = 2; etapa <= 3; etapa++)
+            {
+                p.fase = Fase.Gasto;
+                p.turno = p.UltimoTurnoDeAparicion;
+                p.enemigos.Clear();
+                p.enemigos.Add(new Enemigo { nombre = "Blanco", esCriatura = true, vida = 1, vidaMax = 1,
+                                             bandas = new System.Collections.Generic.List<BandaEnemiga>() });
+                p.r.vigor = 1;
+                p.Golpear(0);
+                if (etapa == 2)
+                {
+                    Assert.AreEqual(Fase.Interludio, p.fase);
+                    p.PartirHacia("tumbas");
+                    Assert.Contains(p.LaMutacion, p.mazo, "del segundo terreno en adelante entra una mutación");
+                }
+            }
+
+            Assert.AreEqual(Fase.Fin, p.fase);
+            Assert.IsTrue(p.gano);
+            Assert.AreEqual(3, p.ruta.Count, "cruzaste tres terrenos");
+        }
+
         [Test]
         public void LasCartasDeUsoHacenAlgo()
         {

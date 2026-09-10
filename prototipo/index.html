@@ -178,6 +178,7 @@ button.m:hover:not(:disabled){background:rgba(232,163,61,.11)}
  <h1>MERLIOT — <em>los lindes de Urmand</em></h1>
  <div class="st">
   <div class="s"><b id="enpie">1</b><i>en pie</i></div>
+  <div class="s"><b id="et">1</b><i>etapa / 3</i></div>
   <div class="s"><b id="tn">—</b><i>turno</i></div>
   <div class="s"><b id="mn">—</b><i>en mano</i></div>
   <div class="s"><b id="res">0</b><i>resueltos</i></div>
@@ -342,39 +343,96 @@ const CRIATURAS=[
    {r:[3,6],ef:{dmg:2}},{r:[9,11],ef:{brota:1}}]},
  {n:'Jauría desertora',clase:'criatura',vida:7,s:'Muflones que dejaron el oficio y ahora cobran peaje.',b:[
    {r:[2,5],ef:{dmg:2}},{r:[8,10],ef:{dmgFondo:3}}]},
+ {n:'Alfa de la jauría',clase:'criatura',vida:8,s:'Es la que decide cuándo atacan.',b:[
+   {r:[4,7],ef:{dmgFondo:3}},{r:[10,12],ef:{dmg:3}}]},
+ {n:'Lengua de fuego',clase:'criatura',vida:7,s:'El incendio dejó de ser una herramienta.',b:[
+   {r:[2,6],ef:{dmgTodos:1}},{r:[9,10],ef:{brota:1}}]},
+ {n:'Los que quedaron',clase:'criatura',vida:11,s:'Familiares de los Urmond, traídos de vuelta a medias.',b:[
+   {r:[3,5],ef:{dmg:3}},{r:[8,9],ef:{descartar:1}},{r:[11,12],ef:{rotar:1,dmg:2}}]},
  {n:'Cosa de la sombra',clase:'criatura',vida:9,s:'No tiene forma, pero tiene intención.',b:[
    {r:[2,4],ef:{dmg:3}},{r:[7,9],ef:{dmgTodos:1}},{r:[12,12],ef:{cura:4}}]}
 ];
 const LUGARES=[
  {n:'Nido de Roten Feeds',clase:'lugar',costo:{destreza:3,saber:2},s:'Semillas abandonadas que crecieron mal. Mientras esté, no para.',b:[
    {r:[7,8],ef:{brota:1}}]},
+ {n:'Cordón desbordado',clase:'lugar',costo:{temple:3,vigor:2},s:'La zanja que abrieron los Karzov ya no alcanza.',b:[
+   {r:[5,7],ef:{dmgTodos:1}}]},
+ {n:'Ventisca sin fin',clase:'lugar',costo:{temple:4,saber:2},s:'No se pelea contra esto. Se busca dónde esconderse.',b:[
+   {r:[2,5],ef:{dmgTodos:1}},{r:[11,12],ef:{descartar:1}}]},
+ {n:'Boca de la cueva',clase:'lugar',costo:{saber:4,destreza:3},s:'La sombra de la montaña empieza acá.',b:[
+   {r:[2,4],ef:{dmg:2}},{r:[6,8],ef:{brota:1}},{r:[10,12],ef:{rotar:1}}]},
  {n:'Tumba antigua',clase:'lugar',costo:{saber:3,temple:1},s:'La abrieron desde adentro y nadie la volvió a cerrar.',b:[
    {r:[2,4],ef:{rotar:1,dmg:2}},{r:[10,11],ef:{descartar:1}}]}
 ];
 const EFIMEROS=[
- {n:'Avalancha',s:'La ladera cede sin avisar.',ev:[{c:{destreza:2},t:'Salir del paso a tiempo'}],ef:{dmgDado:1}},
- {n:'Zarza espinosa',s:'El sendero se cerró solo.',ev:[{c:{vigor:2},t:'Abrirla a machetazos'},{c:{destreza:2},t:'Colarse entre las ramas'}],ef:{dmg:2}},
- {n:'Sendero anegado',s:'El agua parda tapó las piedras blancas.',ev:[{c:{destreza:2},t:'Saltar de piedra en piedra'},{c:{temple:3},t:'Cruzar con el agua a la cintura'}],ef:{dmg:2}},
- {n:'Niebla que confunde',s:'Caminás quince minutos y volvés al mismo tronco.',ev:[{c:{saber:2},t:'Orientarte por el musgo'},{c:{destreza:3},t:'Marcar la corteza y rehacer el camino'}],ef:{descartar:1}},
- {n:'Alimaña hambrienta',s:'Los ojos primero, el resto después.',ev:[{c:{vigor:2},t:'Espantarla a los gritos'},{c:{temple:3},t:'Quedarte quieto hasta que se aburra'}],ef:{dmg:3}},
- {n:'Aullido en la noche',s:'No sabés a qué distancia está.',ev:[{c:{temple:2},t:'Hacer fuego y montar guardia'},{c:{saber:3},t:'Reconocer al animal'}],ef:{dmgDado:1}},
- {n:'Emboscada',s:'Venían siguiéndolos hace rato.',ev:[{c:{vigor:3},t:'Girarse y plantarles cara'},{c:{destreza:3},t:'Romper la fila y dispersarse'}],ef:{dmgFondo:4}},
- {n:'Ventisca',s:'Blanco y nada más, en todas las direcciones.',ev:[{c:{temple:4},t:'Cerrar filas y esperar'}],ef:{dmgTodos:2}},
- {n:'Grieta en la piedra',s:'Se abrió con la última helada.',ev:[{c:{destreza:2},t:'Bordearla por la cornisa'},{c:{vigor:4},t:'Tirar un tronco y cruzar'}],ef:{rotar:1}},
- {n:'Vendedor errante',s:'Trae cosas que no debería tener.',bueno:1,ev:[{c:{destreza:2},t:'Regatearle hasta cansarlo'},{c:{saber:3},t:'Saber qué es lo que trae'}],pr:{cris:4,carta:1}},
- {n:'Piedra con inscripción',s:'Un apellido raspado, pero no del todo.',bueno:1,ev:[{c:{saber:3},t:'Reconstruir el apellido'}],pr:{cris:3,carta:1}},
- {n:'Cántico lejano',s:'Alguien canta y el frío se corre un poco.',bueno:1,ev:[{c:{saber:2},t:'Reconocer la canción y seguirla'}],pr:{cura:4}},
- {n:'Muflón herido',s:'Lo dejaron atrás los suyos.',bueno:1,ev:[{c:{temple:3},t:'Cargarlo hasta un lugar seguro'},{c:{saber:3},t:'Curarle la pata'}],pr:{carta:2}}
+ {n:'Avalancha',nivel:2,s:'La ladera cede sin avisar.',ev:[{c:{destreza:2},t:'Salir del paso a tiempo'}],ef:{dmgDado:1}},
+ {n:'Zarza espinosa',nivel:1,s:'El sendero se cerró solo.',ev:[{c:{vigor:2},t:'Abrirla a machetazos'},{c:{destreza:2},t:'Colarse entre las ramas'}],ef:{dmg:2}},
+ {n:'Sendero anegado',nivel:1,s:'El agua parda tapó las piedras blancas.',ev:[{c:{destreza:2},t:'Saltar de piedra en piedra'},{c:{temple:3},t:'Cruzar con el agua a la cintura'}],ef:{dmg:2}},
+ {n:'Niebla que confunde',nivel:1,s:'Caminás quince minutos y volvés al mismo tronco.',ev:[{c:{saber:2},t:'Orientarte por el musgo'},{c:{destreza:3},t:'Marcar la corteza y rehacer el camino'}],ef:{descartar:1}},
+ {n:'Alimaña hambrienta',nivel:1,s:'Los ojos primero, el resto después.',ev:[{c:{vigor:2},t:'Espantarla a los gritos'},{c:{temple:3},t:'Quedarte quieto hasta que se aburra'}],ef:{dmg:3}},
+ {n:'Aullido en la noche',nivel:2,s:'No sabés a qué distancia está.',ev:[{c:{temple:2},t:'Hacer fuego y montar guardia'},{c:{saber:3},t:'Reconocer al animal'}],ef:{dmgDado:1}},
+ {n:'Emboscada',nivel:2,s:'Venían siguiéndolos hace rato.',ev:[{c:{vigor:3},t:'Girarse y plantarles cara'},{c:{destreza:3},t:'Romper la fila y dispersarse'}],ef:{dmgFondo:4}},
+ {n:'Ventisca',nivel:3,s:'Blanco y nada más, en todas las direcciones.',ev:[{c:{temple:4},t:'Cerrar filas y esperar'}],ef:{dmgTodos:2}},
+ {n:'Grieta en la piedra',nivel:2,s:'Se abrió con la última helada.',ev:[{c:{destreza:2},t:'Bordearla por la cornisa'},{c:{vigor:4},t:'Tirar un tronco y cruzar'}],ef:{rotar:1}},
+ {n:'El fuego se corre',nivel:2,s:'El cordón que abrieron los Karzov ya no contiene nada.',
+   ev:[{c:{temple:3},t:'Cavar una zanja nueva'},{c:{destreza:3},t:'Sacar a todos por el flanco'}],ef:{dmgTodos:1,brota:1}},
+ {n:'Se te vienen encima',nivel:3,s:'Salieron de los dos lados a la vez.',
+   ev:[{c:{vigor:4},t:'Abrirse paso a la fuerza'},{c:{temple:4},t:'Formar un círculo y aguantar'}],ef:{dmg:3,dmgFondo:3}},
+ {n:'El nombre olvidado',nivel:3,s:'Nadie del grupo se acuerda de por qué vinieron.',
+   ev:[{c:{saber:4},t:'Repetir en voz alta lo que sí recordás'}],ef:{descartar:2,rotar:1}},
+ {n:'Vendedor errante',nivel:1,s:'Trae cosas que no debería tener.',bueno:1,ev:[{c:{destreza:2},t:'Regatearle hasta cansarlo'},{c:{saber:3},t:'Saber qué es lo que trae'}],pr:{cris:4,carta:1}},
+ {n:'Piedra con inscripción',nivel:2,s:'Un apellido raspado, pero no del todo.',bueno:1,ev:[{c:{saber:3},t:'Reconstruir el apellido'}],pr:{cris:3,carta:1}},
+ {n:'Cántico lejano',nivel:1,s:'Alguien canta y el frío se corre un poco.',bueno:1,ev:[{c:{saber:2},t:'Reconocer la canción y seguirla'}],pr:{cura:4}},
+ {n:'Muflón herido',nivel:1,s:'Lo dejaron atrás los suyos.',bueno:1,ev:[{c:{temple:3},t:'Cargarlo hasta un lugar seguro'},{c:{saber:3},t:'Curarle la pata'}],pr:{carta:2}}
 ];
-const TERRENO={
- n:'Los Lindes de Urmand',
- amb:{n:'El frío del norte',s:'No se pelea. Se aguanta.',clase:'amb',b:[
-   {r:[2,3],ef:{dmg:2},t:'{vida}{vida} al de adelante',mala:1}]},
- abre:[{q:'criatura',n:'Broten mayor',turno:2},{q:'lugar',n:'Nido de Roten Feeds',turno:4},{q:'criatura',n:'Jauría desertora',turno:7},{q:'lugar',n:'Tumba antigua',turno:10}],
- porTurno:1
-};
+const TERRENOS=[
+ {id:'lindes',etapa:1,n:'Los Lindes de Urmand',
+  intro:'El obispo te mandó a buscar una semilla. Los lindes son lo primero que hay que cruzar.',
+  problema:'Algo larga criaturas sin parar. Hay que encontrar la fuente.',
+  amb:{n:'El frío del norte',s:'No se pelea. Se aguanta.',clase:'amb',b:[
+    {r:[2,3],ef:{dmg:2},t:'{vida}{vida} al de adelante',mala:1}]},
+  abre:[{q:'criatura',n:'Broten mayor',turno:2},{q:'lugar',n:'Nido de Roten Feeds',turno:4},
+        {q:'criatura',n:'Jauría desertora',turno:7}]},
+
+ {id:'cordon',etapa:2,n:'El Cordón de Fuego',
+  intro:'Los granjeros Karzov abrieron una franja quemada para frenar la peste. Se les fue de las manos.',
+  problema:'El fuego pega a toda la fila. Ir ancho acá se paga.',
+  amb:{n:'Ceniza en el aire',s:'Cuesta respirar y cuesta ver.',clase:'amb',b:[
+    {r:[6,7],ef:{dmgTodos:1},t:'{vida} a cada uno',mala:1}]},
+  abre:[{q:'criatura',n:'Lengua de fuego',turno:2},{q:'lugar',n:'Cordón desbordado',turno:4},
+        {q:'criatura',n:'Alfa de la jauría',turno:7}]},
+
+ {id:'frente',etapa:2,n:'El Frente Helado',
+  intro:'La ruta corta pasa por donde el bosque se rinde. Nadie la recomienda.',
+  problema:'Poco que producir y una ventisca que no para. Se aguanta o no se sale.',
+  amb:{n:'Blanco sin fondo',s:'Caminás sin saber si avanzás.',clase:'amb',b:[
+    {r:[2,4],ef:{dmg:2},t:'{vida}{vida} al de adelante',mala:1},
+    {r:[12,12],ef:{descartar:1},t:'perdés una carta',mala:1}]},
+  abre:[{q:'lugar',n:'Ventisca sin fin',turno:2},{q:'criatura',n:'Alfa de la jauría',turno:5},
+        {q:'criatura',n:'Broten mayor',turno:8}]},
+
+ {id:'tumbas',etapa:3,n:'Las Tumbas de Urmond',
+  intro:'Acá terminó la familia que fundó media academia. La semilla que llevás salió de este suelo.',
+  problema:'Lo que hay enterrado te desarma la fila y te vacía la mano.',
+  amb:{n:'La piedra recuerda',s:'Cada losa tuvo un apellido. Alguien los raspó.',clase:'amb',b:[
+    {r:[2,4],ef:{descartar:1},t:'perdés una carta',mala:1}]},
+  abre:[{q:'criatura',n:'Los que quedaron',turno:2},{q:'lugar',n:'Tumba antigua',turno:4},
+        {q:'criatura',n:'Cosa de la sombra',turno:7}]},
+
+ {id:'cuevas',etapa:3,n:'Las Cuevas de la Sombra',
+  intro:'Por acá se entra a la montaña que no da sol. Es el camino más corto y el peor.',
+  problema:'La oscuridad te mueve la fila y larga cosas. Nada se queda quieto.',
+  amb:{n:'Sin luz',s:'No ves quién va adelante.',clase:'amb',b:[
+    {r:[9,10],ef:{rotar:1},t:'el de adelante pasa al fondo',mala:1}]},
+  abre:[{q:'lugar',n:'Boca de la cueva',turno:2},{q:'criatura',n:'Cosa de la sombra',turno:5},
+        {q:'criatura',n:'Los que quedaron',turno:8}]}
+];
+const SEMILLA={n:'La semilla',tipo:'perm',raza:'muscari',vida:1,cr:0,s:'Late. Pesa más de lo que debería pesar algo así.',b:[{r:[2,12],cris:1}],k:0};
+const MUTACION={n:'Mutación',tipo:'uso',cr:9,s:'Un dolor que no es tuyo.',ef:{},x:'No hace nada. Pesa.',k:0};
 
 let G;
+const CATALOGO=()=>[...CARTAS,SEMILLA,MUTACION];
+const baseDe=h=>CATALOGO().find(x=>x.n===h.n)||h;
 const R=n=>Math.floor(Math.random()*n);
 function log(h){const p=document.createElement('p');p.innerHTML=h;
  const l=document.getElementById('log');l.prepend(p);while(l.children.length>30)l.lastChild.remove();}
@@ -382,11 +440,11 @@ function barajar(a){for(let i=a.length-1;i>0;i--){const j=R(i+1);[a[i],a[j]]=[a[
 
 function init(){
  const m=[];CARTAS.forEach(c=>{for(let i=0;i<c.k;i++)m.push({...c})});
- const ef=[];EFIMEROS.forEach(e=>{ef.push({...e},{...e})});
+ const ef=mazoEfimeros(1);
  G={turno:0,fase:'prep',mazo:barajar(m),desc:[],mano:[],party:[],
     efMazo:barajar(ef),efimeros:[],enemigos:[],resueltos:0,
     r:{vigor:0,temple:0,destreza:0,saber:0},cris:3,cementerio:[],amuletos:[],eligiendo:null,objetivo:null,
-    d1:0,d2:0,d3:0,tresdados:false,pendientes:[],fin:false};
+    d1:0,d2:0,d3:0,tresdados:false,pendientes:[],etapa:1,terr:TERRENOS[0],ruta:[],semilla:false,interludio:null,fin:false};
  robar(5);
  // la mano de salida siempre trae con quién armar una fila
  let intentos=0;
@@ -400,6 +458,7 @@ function init(){
  }
  barajar(G.mazo);
 
+ log(`<b>${G.terr.n}.</b> ${G.terr.intro}`);
  log('Revelás el terreno. Por ahora está quieto. <b>Salís solo: elegí con quién enfrentarlo.</b>');
  log('<b>Antes de empezar, acomodá tu party con lo que traés de casa.</b> Todavía no se roba ni se tira.');
  pintar();
@@ -407,8 +466,13 @@ function init(){
 function robar(n){for(let i=0;i<n;i++){
  if(!G.mazo.length){if(!G.desc.length)return;G.mazo=barajar(G.desc);G.desc=[];}
  G.mano.push(G.mazo.pop());}}
+function mazoEfimeros(nivel){
+ const m=[];
+ EFIMEROS.filter(e=>e.nivel<=nivel&&e.nivel>=nivel-1).forEach(e=>m.push({...e},{...e}));
+ return barajar(m);
+}
 function abrirEfimero(){
- if(!G.efMazo.length)G.efMazo=barajar(EFIMEROS.map(e=>({...e})));
+ if(!G.efMazo.length)G.efMazo=mazoEfimeros(G.etapa);
  const e={...G.efMazo.pop(),id:Math.random()};
  G.efimeros.push(e);
  log(`Se presenta <b>${e.n}</b>. Tenés este turno para resolverlo.`);
@@ -438,7 +502,6 @@ function pagar(o){
 const exacto=o=>REC.every(r=>!o[r]||G.r[r]>=o[r]);
 
 const tiene=p=>G.amuletos.some(a=>a.pas===p);
-const baseDe=h=>CARTAS.find(x=>x.n===h.n);
 const vidaMaxDe=h=>baseDe(h).vida+(h.mejoras||[]).reduce((s2,m)=>s2+(m.vida||0),0);
 const costoEf=c=>Math.max(1,c.cr-((c.tipo==='uso'&&tiene('barato'))?1:0));
 function dañar(n,quien){
@@ -449,7 +512,7 @@ function dañar(n,quien){
    log(`El escudo de <b>${h.n}</b> para ${a}.`);if(n<=0)break;}
   const q=Math.min(h.vida,n);h.vida-=q;n-=q;
   if(h.vida<=0){caidos.push(h.n);const c=G.party.shift();
-   const base=CARTAS.find(x=>x.n===c.n);c.vida=base.vida;
+   const base=baseDe(c);c.vida=base.vida;
    if(c.mejoras&&c.mejoras.length){G.desc.push(...c.mejoras);
     log(`Se pierden en el camino: ${c.mejoras.map(m=>m.n).join(', ')}.`);c.mejoras=[];}
    G.cementerio.push(c);
@@ -471,7 +534,7 @@ function dañarTodos(n){
   if(h.escudo>0){const a=Math.min(h.escudo,q);h.escudo-=a;q-=a;}
   h.vida-=q;
   if(h.vida<=0){caidos.push(h.n);const c=G.party.splice(i,1)[0];
-   const base=CARTAS.find(x=>x.n===c.n);c.vida=base.vida;
+   const base=baseDe(c);c.vida=base.vida;
    if(c.mejoras&&c.mejoras.length){G.desc.push(...c.mejoras);
     log(`Se pierden en el camino: ${c.mejoras.map(m=>m.n).join(', ')}.`);c.mejoras=[];}
    G.cementerio.push(c);
@@ -538,7 +601,65 @@ function pagarLugar(idx,r){
  pintar();
 }
 function revisarVictoria(){
- if(!G.enemigos.length&&G.turno>=TERRENO.abre[TERRENO.abre.length-1].turno)fin(true);
+ if(G.enemigos.length)return;
+ if(G.turno<G.terr.abre[G.terr.abre.length-1].turno)return;
+ G.ruta.push(G.terr.n);
+ if(G.etapa>=3)return fin(true);
+ abrirInterludio();
+}
+function abrirInterludio(){
+ G.fase='interludio';
+ const pool=barajar(CARTAS.filter(c=>c.tipo!=='amuleto'||!G.amuletos.some(a=>a.n===c.n)));
+ G.interludio={cofre:pool.slice(0,3),tomada:false,sacada:false,rutas:TERRENOS.filter(t=>t.etapa===G.etapa+1)};
+ // descanso: vuelven los caídos y se cura la fila
+ if(G.cementerio.length){
+  const vuelven=G.cementerio.splice(0,G.cementerio.length);
+  vuelven.forEach(c=>G.mazo.push(c));
+  log(`Los caídos vuelven al mazo: ${vuelven.map(c=>c.n).join(', ')}.`);
+ }
+ G.party.forEach(h=>h.vida=vidaMaxDe(h));
+ G.mazo=barajar([...G.mazo,...G.desc,...G.mano]);G.desc=[];G.mano=[];
+ log('<b>Cruzaste el terreno.</b> Descansan, se curan y abren el cofre.');
+ pintar();
+}
+function tomarDelCofre(i){
+ if(G.fase!=='interludio'||G.interludio.tomada)return;
+ const c={...G.interludio.cofre[i]};
+ G.mazo.push(c);G.interludio.tomada=true;
+ log(`Del cofre sacás <b>${c.n}</b>.`);pintar();
+}
+function sacarDelMazo(nombre){
+ if(G.fase!=='interludio'||G.interludio.sacada)return;
+ const i=G.mazo.findIndex(c=>c.n===nombre);
+ if(i<0)return;
+ if(G.mazo[i].n===SEMILLA.n){log('La semilla no se puede dejar atrás.');return}
+ G.mazo.splice(i,1);G.interludio.sacada=true;
+ log(`Dejás atrás <b>${nombre}</b>. No lo vas a volver a ver.`);pintar();
+}
+function partirHacia(id){
+ if(G.fase!=='interludio')return;
+ const t=TERRENOS.find(x=>x.id===id);
+ if(!t)return;
+ // sólo los primeros cinco siguen viaje; el orden de la fila decide quién
+ if(G.party.length>5){
+  const quedan=G.party.splice(5);
+  quedan.forEach(h=>{if(h.mejoras&&h.mejoras.length)G.mazo.push(...h.mejoras);
+   h.mejoras=[];h.vida=baseDe(h).vida;G.mazo.push(h);});
+  log(`Se quedan atrás: <b>${quedan.map(h=>h.n).join(', ')}</b>. Vuelven al mazo.`);
+ }
+ G.etapa++;G.terr=t;G.enemigos=[];G.efimeros=[];G.pendientes=[];
+ G.efMazo=mazoEfimeros(G.etapa);
+ if(!G.semilla){
+  G.semilla=true;G.mazo.push({...SEMILLA});
+  log('<b>Encontraste la semilla</b> entre las raíces. Va con vos y no se puede dejar.');
+ } else {
+  G.mazo.push({...MUTACION});
+  log('<b>La semilla se mueve sola.</b> Entra una mutación a tu mazo.');
+ }
+ G.mazo=barajar(G.mazo);
+ G.turno=0;G.interludio=null;
+ log(`<b>${t.n}.</b> ${t.intro}`);
+ G.fase='gasto';terminar();
 }
 function escudar(i){
  if(G.fase!=='gasto'||G.fin)return;
@@ -663,7 +784,7 @@ function producir(){
   }}));
  log(`Sale <b>${v}</b>${G.d3?` (descartás un ${G.d3})`:''}. ${dic.length?'Producen: '+dic.join(', ')+'.':'No produce nadie.'}`);
  G.pendientes=[];
- TERRENO.amb.b.forEach(b=>{if(enB(b,v))G.pendientes.push({de:TERRENO.amb.n,ef:b.ef})});
+ G.terr.amb.b.forEach(b=>{if(enB(b,v))G.pendientes.push({de:G.terr.amb.n,ef:b.ef})});
  G.enemigos.forEach(e=>e.b.forEach(b=>{if(enB(b,v))G.pendientes.push({de:e.n,ef:b.ef,quien:e})}));
  G.party.forEach(h=>h.escudo=0);
  if(tiene('escudo')&&G.party.length){G.party[0].escudo=1;log('El farol cubre al de adelante.');}
@@ -704,15 +825,15 @@ function terminar(){
  G.turno++;G.fase='tirar';G.yaRetiro=false;REC.forEach(r=>G.r[r]=0);
  G.cris+=2;
  robar(1);
- TERRENO.abre.filter(a=>a.turno===G.turno).forEach(a=>abrirEnemigo(a.q,a.n));
- if(G.turno>=2)for(let i=0;i<TERRENO.porTurno;i++)abrirEfimero();
+ G.terr.abre.filter(a=>a.turno===G.turno).forEach(a=>abrirEnemigo(a.q,a.n));
+ if(G.turno>=2)for(let i=0;i<1;i++)abrirEfimero();
  log(`<b>Turno ${G.turno}.</b>`);
  pintar();
 }
 function fin(b,m){G.fin=true;pintar();
  document.getElementById('mod').innerHTML=
-  `<h2>${b?'El cofre es tuyo':'No saliste de los Lindes'}</h2>
-   <p>${b?`Desarmaste el nido y resolviste ${G.resueltos} eventos en ${G.turno} turnos, con ${G.party.length} en pie.`
+  `<h2>${b?'Plantaste la semilla':'Ahí terminó el viaje'}</h2>
+   <p>${b?`Cruzaste ${G.ruta.join(', ')} y llegaste con ${G.party.length} en pie.`
         :(m||'No quedó nadie en pie.')+` Turno ${G.turno}.`}</p>
    <button onclick="location.reload()">Otra vez</button>`;
  document.getElementById('ov').classList.add('on');}
@@ -737,7 +858,7 @@ function enemigoHTML(e,i,v){
   ${e.b.map(b=>`<div class="banda ${enB(b,v)?'on mala':''}"><span class="bnum">${rot(b)}</span><span class="bt">${txtEfecto(b.ef)}</span></div>`).join('')}
   ${pie}</div>`;
 }
-const baseEnem=e=>[...CRIATURAS,...LUGARES].find(x=>x.n===e.n);
+const baseEnem=e=>[...CRIATURAS,...LUGARES].find(x=>x.n===e.n)||e;
 function txtEfecto(ef){
  const d=[];
  if(ef.dmg)d.push(Array(ef.dmg).fill(ico('vida')).join('')+' al de adelante');
@@ -760,12 +881,50 @@ function fichaHTML(o,v){
     <div class="fs" style="text-align:right;margin-top:4px">desarmado ${o.pista} de ${o.meta}</div>`:''}
  </div>`;
 }
+function pintarInterludio(){
+ const I=G.interludio;
+ const conteo={};[...G.mazo].forEach(c=>conteo[c.n]=(conteo[c.n]||0)+1);
+ document.getElementById('mod').innerHTML=
+  `<h2>Al otro lado</h2>
+   <p>Cruzaste <b style="font-style:normal">${G.terr.n}</b>. Descansan, se curan, y los caídos vuelven al mazo.</p>
+   <div class="rot" style="justify-content:center">El cofre &middot; llevate una</div>
+   <div class="opts" style="grid-template-columns:repeat(3,1fr);margin-bottom:16px">
+    ${I.cofre.map((c,i)=>`<div class="opt ${I.tomada?'usado':''}" ${I.tomada?'':`onclick="tomarDelCofre(${i})"`}>
+      <div class="tipo">${c.tipo==='perm'?(c.raza?RAZAS[c.raza]+' · ':'')+c.vida+' de vida':c.tipo==='mejora'?(c.soloRaza?'mejora · sólo '+RAZAS[c.soloRaza]:'mejora'):c.tipo==='amuleto'?'amuleto':'un solo uso'}</div>
+      <div class="fn">${c.n}</div>
+      <div class="cx">${c.tipo==='perm'||c.tipo==='mejora'
+        ?(c.b||[]).map(b=>`<span class="linea"><span class="bnum">${rot(b)}</span>${b.p?pips(b.p):(b.cris?Array(b.cris).fill(ico('cristal')).join(''):(b.cura?Array(b.cura).fill(ico('vida')).join(''):''))}</span>`).join('')
+        :simb(c.x||'')}</div>
+      <div class="cq">${Array(c.cr).fill(ico('cristal')).join('')}</div>
+     </div>`).join('')}
+   </div>
+   <div class="rot" style="justify-content:center">${I.sacada?'Ya dejaste una atrás':'Dejá una carta atrás &middot; opcional'}</div>
+   <div class="lista" style="margin-bottom:18px">
+    ${Object.keys(conteo).sort().map(n=>`<button class="tr" ${I.sacada?'disabled':''}
+      onclick="sacarDelMazo(${JSON.stringify(n)})">${n} <b>x${conteo[n]}</b></button>`).join('')}
+   </div>
+   ${G.party.length>5?`<div class="aviso5">Siguen viaje sólo los <b>primeros cinco</b> de la fila.
+     Van: ${G.party.slice(0,5).map(h=>h.n).join(', ')}.<br>
+     Se quedan: ${G.party.slice(5).map(h=>h.n).join(', ')}. Cerrá esto y reordená si querés cambiarlo.</div>`:''}
+   <div class="rot" style="justify-content:center">¿Hacia dónde? &middot; no se vuelve</div>
+   <div class="opts">
+    ${I.rutas.map(t=>`<div class="opt ruta" onclick="partirHacia('${t.id}')">
+      <div class="fn">${t.n}</div>
+      <div class="fs">${t.intro}</div>
+      <div class="cx" style="color:var(--rojo);margin-top:6px">${t.problema}</div>
+      <div class="cq">${t.abre.map(a=>a.n).join(' · ')}</div>
+     </div>`).join('')}
+   </div>`;
+ document.getElementById('ov').classList.add('on');
+}
 function pintar(){
+ if(G.fase==='interludio')return pintarInterludio();
  const v=(G.fase==='gasto')?G.d1+G.d2:-1;
  const enDobles=G.fase==='dobles';
  const vidaTot=G.party.reduce((s2,h)=>s2+h.vida,0);
  document.getElementById('enpie').textContent=G.party.length;
  document.getElementById('enpie').className=G.party.length<=1?'alerta':'';
+(function(){const e=document.getElementById('et');if(e)e.textContent=G.etapa;})();
  document.getElementById('tn').textContent=G.fase==='prep'?'—':G.turno;
  document.getElementById('res').textContent=G.resueltos;
  document.getElementById('mn').textContent=G.mano.length;
@@ -775,16 +934,16 @@ function pintar(){
   G.fase==='prep'?'Preparación':G.fase==='dobles'?'Dobles':G.fase==='tirar'?'Tirada de producción':'Gastar lo que salió';
  document.getElementById('npart').textContent=G.party.length+' de 7';
 
- const faltan=TERRENO.abre.filter(a=>!G.enemigos.some(e=>e.n===a.n)&&G.turno<a.turno).length;
+ const faltan=G.terr.abre.filter(a=>!G.enemigos.some(e=>e.n===a.n)&&G.turno<a.turno).length;
  document.getElementById('cond').innerHTML=
   `Para llevarte el cofre tenés que <b>limpiar el linde</b>:<br>
-   ${TERRENO.abre.map(a=>{
+   ${G.terr.abre.map(a=>{
      const vivo=G.enemigos.find(e=>e.n===a.n);
      const porVenir=G.turno<a.turno&&!vivo;
      return `<span class="${!vivo&&!porVenir?'hecho':''}">${!vivo&&!porVenir?'✓':porVenir?'?':'·'} ${porVenir?'<i>algo más, todavía no aparece</i>':a.n}</span>`}).join('<br>')}
    <div class="fs" style="margin-top:8px">Los efímeros duran un turno: si no los pagás, te caen encima.</div>`;
  document.getElementById('terr').innerHTML=
-  fichaHTML(TERRENO.amb,v)+G.enemigos.map((e,i)=>enemigoHTML(e,i,v)).join('');
+  fichaHTML(G.terr.amb,v)+G.enemigos.map((e,i)=>enemigoHTML(e,i,v)).join('');
 
  document.getElementById('dados').innerHTML=(G.fase==='gasto'||enDobles)
   ?`<div class="dd">${G.d1}</div><div class="dd">${G.d2}</div>${G.d3?`<div class="dd" style="opacity:.35">${G.d3}</div>`:''}`
@@ -819,7 +978,7 @@ function pintar(){
 
  document.getElementById('party').innerHTML=G.party.length
   ?G.party.map((c,i)=>{
-    const max=CARTAS.find(x=>x.n===c.n).vida;
+    const max=(baseDe(c).vida||0);
     const puedeMover=!G.fin&&G.party.length>1&&(G.fase==='prep'||(G.fase==='gasto'&&G.r.destreza>0));
     const elig=G.eligiendo!==null&&G.eligiendo!==undefined;
     return `<div class="heroe ${i===0?'frente':''} ${elig&&admite(c,G.mano[G.eligiendo])?'elegible':''} ${elig&&!admite(c,G.mano[G.eligiendo])?'lleno':''}" ${elig&&admite(c,G.mano[G.eligiendo])?`onclick="aplicarA(${i})"`:''}>
@@ -868,7 +1027,7 @@ function pintar(){
 
  document.getElementById('mano').innerHTML=G.mano.map((c,i)=>
   `<div class="cd ${c.tipo==='perm'?'perm':c.tipo==='amuleto'?'amul':c.tipo==='mejora'?'mejo':'uso'} ${G.eligiendo===i?'eligiendo':''}">
-    <div class="tipo">${c.tipo==='perm'?(c.raza?RAZAS[c.raza]+' · ':'')+CARTAS.find(x=>x.n===c.n).vida+' de vida':c.tipo==='amuleto'?'amuleto · pasiva':c.tipo==='mejora'?'mejora · va sobre un héroe':'un solo uso'}</div>
+    <div class="tipo">${c.tipo==='perm'?(c.raza?RAZAS[c.raza]+' · ':'')+(baseDe(c).vida||0)+' de vida':c.tipo==='amuleto'?'amuleto · pasiva':c.tipo==='mejora'?'mejora · va sobre un héroe':'un solo uso'}</div>
     <div class="fn">${c.n}</div>
     <div class="cx">${(c.tipo==='perm'||c.tipo==='mejora')
       ?c.b.map(b=>`<span class="linea"><span class="bnum">${rot(b)}</span>${b.p?pips(b.p):b.cura?Array(b.cura).fill(ico('vida')).join(''):Array(b.cris||0).fill(ico('cristal')).join('')}</span>`).join('')

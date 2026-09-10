@@ -6,6 +6,7 @@ const path = require('path');
 
 const ruta = path.join(__dirname, '..', 'data', 'merliot.json');
 const d = JSON.parse(fs.readFileSync(ruta, 'utf8'));
+if (!d.terrenos || !d.terrenos.length) { console.error('Sin terrenos'); process.exit(1); }
 const errores = [], avisos = [];
 const razas = new Set(d.razas.map(r => r.id));
 const RECURSOS = ['vigor', 'temple', 'destreza', 'saber'];

@@ -22,7 +22,10 @@ namespace Merliot.Tests
             var db = MerliotDatabase.I;
             Assert.IsNotNull(db, "no hay MerliotDatabase en la escena");
             Assert.IsNotNull(db.Data, "el JSON no cargó");
-            Assert.AreEqual(51, db.Data.cartas.Count, "cambió la cantidad de cartas del mazo");
+            // La semilla y las mutaciones están en el catálogo con copias 0: entran
+            // por la campaña, no por el mazo. Lo que se fija acá es lo repartible.
+            Assert.AreEqual(51, db.Data.cartas.Count(c => c.copias > 0), "cambió el mazo");
+            Assert.IsTrue(db.Data.cartas.Any(c => c.id == "la-semilla"), "falta la semilla");
 
             var carta = GameObject.Find("carta");
             Assert.IsNotNull(carta, "el visor no instanció la carta");

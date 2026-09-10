@@ -52,3 +52,38 @@ algunas mejoras son exclusivas de una raza, y algunos héroes producen
 
 Ganás cuando limpiaste todos los permanentes del terreno.
 Perdés cuando no te queda nadie en pie.
+
+## La campaña
+
+El viaje son **tres etapas** y es de ida: no se vuelve a un terreno cruzado.
+
+- **Etapa 1** — Los Lindes de Urmand. Fija. Es donde aprendés.
+- **Etapa 2** — elegís entre el Cordón de Fuego y el Frente Helado.
+- **Etapa 3** — elegís entre las Tumbas de Urmond y las Cuevas de la Sombra.
+
+Cada terreno tiene su propio tipo de problema, no números más grandes:
+uno larga criaturas sin parar, otro castiga ir ancho, otro te vacía la mano,
+otro te desordena la fila.
+
+### Entre terrenos
+
+Al limpiar un terreno se abre el interludio:
+
+1. **Descanso.** La fila se cura entera y los caídos vuelven al mazo.
+2. **Cofre.** Te ofrecen tres cartas y te llevás una.
+3. **Podés dejar una carta atrás**, para siempre. Adelgazar el mazo es tan valioso como engordarlo.
+4. **Elegís ruta**, viendo qué problema tiene cada destino y qué hay adentro.
+5. **Siguen viaje sólo los primeros cinco de la fila.** El resto vuelve al mazo con su equipo.
+   El orden que armaste para pelear también decide quién te acompaña.
+
+### La semilla
+
+Al salir del primer terreno la encontrás. Es una carta que **no se puede dejar atrás**.
+Produce 1 cristal en cualquier tirada, pero **cada terreno nuevo te mete una Mutación al mazo**:
+una carta que no hace nada y ocupa lugar. Cuanto más viajás, más pesada se pone.
+
+### La dificultad
+
+El mazo de efímeros **no crece: rota**. Al pasar de etapa salen las cartas del nivel viejo
+y entran las del nuevo. Las de nivel alto no pegan más fuerte: traen verbos nuevos
+(cosas que largan más cosas, ataques por dos lados, pérdida de memoria).
