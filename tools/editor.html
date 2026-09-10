@@ -1,0 +1,850 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Merliot · editor de cartas</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Karla:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* La paleta es la del prototipo: cada recurso tiene su color en todo el juego
+   y acá tiene que ser el mismo, o el editor miente sobre lo que estás mirando. */
+:root{
+ --n:#0f1319;--c:#181d26;--c2:#1f252f;--b:#2a313d;--b2:#3b4453;--p:#e6ddc7;--t:#87857a;
+ --vigor:#c9563f;--temple:#5f8fa8;--destreza:#8a9c55;--saber:#9a86c4;
+ --oro:#e8a33d;--rojo:#b04a35;--cristal:#8fd0d8;--vida:#c96a55;
+ --d:'Cormorant Garamond',Georgia,serif;--u:'Karla',system-ui,sans-serif;
+ --ok:#6f9455;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--n);background-image:radial-gradient(ellipse at 50% -8%,#1c2230,#0f1319 62%);
+ color:var(--p);font-family:var(--u);font-size:13px;min-height:100vh;padding:12px}
+h1{font-family:var(--d);font-size:21px;font-weight:600}
+h1 em{font-style:italic;color:var(--oro);font-weight:400}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+
+header{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
+ border-bottom:1px solid var(--b);padding-bottom:9px;margin-bottom:12px}
+.ruta{font-size:10.5px;color:var(--t);font-variant-numeric:tabular-nums}
+.acciones{margin-left:auto;display:flex;align-items:center;gap:10px}
+
+.btn{background:var(--c2);border:1px solid var(--b2);border-radius:3px;
+ padding:6px 13px;font-size:12px;letter-spacing:.02em}
+.btn:hover{border-color:var(--t)}
+.btn.primario{background:#2a3a2a;border-color:#46603f;color:#cfe0bd}
+.btn.primario:disabled{background:var(--c2);border-color:var(--b);color:var(--t);cursor:default}
+.btn.chico{padding:3px 8px;font-size:10.5px}
+.btn.peligro:hover{border-color:var(--rojo);color:#e0a494}
+
+.aviso{font-size:11px;padding:3px 9px;border-radius:2px;border:1px solid var(--b2)}
+.aviso.sucio{color:var(--oro);border-color:#5c4620;background:#241d10}
+.aviso.malo{color:#e0a494;border-color:#4a2f28;background:#241a18}
+.aviso.bien{color:#a9c08f;border-color:#33452c;background:#18201a}
+
+.cols{display:grid;grid-template-columns:270px minmax(0,1fr) 340px;gap:11px;align-items:start}
+@media(max-width:1240px){.cols{grid-template-columns:250px minmax(0,1fr)}}
+@media(max-width:900px){.cols{grid-template-columns:1fr}}
+
+.caja{background:var(--c);border:1px solid var(--b);border-radius:3px;padding:12px}
+.caja+.caja{margin-top:11px}
+.rot{font-size:8.5px;letter-spacing:.19em;text-transform:uppercase;color:var(--t);
+ margin-bottom:9px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.rot b{font-weight:700;color:var(--p);letter-spacing:.19em}
+
+/* ── lista ─────────────────────────────────────────────────────────── */
+.filtros{display:flex;flex-direction:column;gap:6px;margin-bottom:9px}
+.filtros .fila{display:flex;gap:6px}
+input[type=text],input[type=number],select,textarea{
+ background:var(--n);border:1px solid var(--b);border-radius:2px;padding:5px 7px;
+ font-size:12px;width:100%}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--b2)}
+textarea{resize:vertical;min-height:52px;line-height:1.45;font-family:var(--u)}
+
+.lista{list-style:none;max-height:calc(100vh - 250px);overflow-y:auto;
+ border-top:1px solid var(--b);margin-top:2px}
+.it{display:flex;align-items:baseline;gap:6px;padding:6px 7px;border-bottom:1px solid #21262f;
+ cursor:pointer;line-height:1.25}
+.it:hover{background:var(--c2)}
+.it.sel{background:#23292f;box-shadow:inset 2px 0 0 var(--oro)}
+.it .nm{font-family:var(--d);font-size:14px;flex:1;min-width:0;
+ overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.it .cost{font-variant-numeric:tabular-nums;color:var(--cristal);font-size:11px}
+.it.roto .nm{color:#e0a494}
+.tp{font-size:8px;letter-spacing:.11em;text-transform:uppercase;color:var(--t);
+ border:1px solid var(--b);border-radius:2px;padding:0 4px;flex:none}
+.tp.perm{color:var(--vigor);border-color:#4d2b23}
+.tp.mejora{color:var(--saber);border-color:#3d3453}
+.tp.amuleto{color:var(--cristal);border-color:#2a4a4e}
+.tp.uso{color:var(--destreza);border-color:#3a4426}
+.vacio{color:var(--t);font-size:11.5px;padding:14px 4px;text-align:center}
+
+/* ── editor ────────────────────────────────────────────────────────── */
+.campos{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:10px}
+.campo{display:flex;flex-direction:column;gap:4px;min-width:0}
+.campo.ancho{grid-column:1/-1}
+label{font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--t)}
+label .pista{text-transform:none;letter-spacing:0;color:#5f5e57;font-size:10px;margin-left:5px}
+.fijo{background:#141920;color:var(--t);border-style:dashed}
+
+.grupo{border:1px solid var(--b);border-radius:3px;padding:10px;margin-top:11px}
+.grupo>.rot{margin-bottom:8px}
+
+.banda{border:1px solid var(--b);border-left:2px solid var(--b2);border-radius:2px;
+ padding:9px;margin-bottom:8px;background:#161b23}
+.banda .cab{display:flex;align-items:center;gap:7px;margin-bottom:8px;flex-wrap:wrap}
+.banda .cab .rango{font-family:var(--d);font-size:15px;color:var(--oro);min-width:44px}
+.rec4{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.rec{display:flex;flex-direction:column;gap:3px}
+.rec label{display:flex;align-items:center;gap:4px;letter-spacing:.1em}
+.pip{width:8px;height:8px;border-radius:50%;flex:none}
+.pip.vigor{background:var(--vigor)}.pip.temple{background:var(--temple)}
+.pip.destreza{background:var(--destreza)}.pip.saber{background:var(--saber)}
+.mini{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:7px;margin-top:8px}
+
+/* ── paneles ───────────────────────────────────────────────────────── */
+/* La identidad de cada recurso la carga la POSICIÓN (una fila fija, rotulada),
+   no el color: temple y saber son casi indistinguibles a ojo (ΔE 9.7) y peor
+   con deuteranopía. El color acompaña, nunca decide. */
+.mapa{display:grid;grid-template-columns:52px repeat(11,1fr);gap:2px;align-items:center}
+.mapa .eje{font-size:9px;color:var(--t);text-align:center;font-variant-numeric:tabular-nums}
+.mapa .fila-rot{font-size:9px;letter-spacing:.08em;text-transform:uppercase;
+ display:flex;align-items:center;gap:4px;color:var(--t)}
+.celda{height:19px;border-radius:2px;background:#141920;display:flex;
+ align-items:center;justify-content:center;font-size:9.5px;
+ font-variant-numeric:tabular-nums;color:#0f1319;font-weight:700;cursor:default}
+.celda.cero{color:#3b4453;font-weight:400}
+.celda.mia{box-shadow:0 0 0 1.5px var(--oro)}
+.total{height:15px;border-radius:2px;display:flex;align-items:center;justify-content:center;
+ font-size:9px;font-variant-numeric:tabular-nums;background:#141920;color:var(--t)}
+.total.pelado{background:#2e1714;color:#e0a494;font-weight:700}
+
+.barras{display:flex;flex-direction:column;gap:5px}
+.barra{display:grid;grid-template-columns:64px 1fr 30px;gap:7px;align-items:center}
+.barra .et{font-size:10px;color:var(--t);display:flex;align-items:center;gap:5px;
+ overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pista-b{background:#141920;border-radius:2px;height:9px;overflow:hidden}
+.pista-b i{display:block;height:100%;border-radius:0 2px 2px 0;background:var(--b2)}
+.barra .val{font-size:10.5px;font-variant-numeric:tabular-nums;text-align:right;color:var(--p)}
+.barra.aca .et{color:var(--oro)}
+
+table.reparto{width:100%;border-collapse:collapse;font-size:11.5px}
+table.reparto th{font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;
+ color:var(--t);font-weight:400;text-align:right;padding:0 0 5px}
+table.reparto th:first-child{text-align:left}
+table.reparto td{padding:3px 0;border-top:1px solid #21262f;text-align:right;
+ font-variant-numeric:tabular-nums}
+table.reparto td:first-child{text-align:left;font-family:var(--d);font-size:13.5px}
+table.reparto tr.floja td{color:var(--oro)}
+.nota{font-size:10.5px;color:var(--t);line-height:1.5;margin-top:8px}
+.nota b{color:var(--oro);font-weight:500}
+
+.probs{list-style:none;display:flex;flex-direction:column;gap:5px;
+ max-height:230px;overflow-y:auto}
+.prob{font-size:11px;line-height:1.4;padding:5px 7px;border-radius:2px;cursor:pointer;
+ border-left:2px solid var(--rojo);background:#1d1614}
+.prob:hover{background:#241a18}
+.prob.warn{border-left-color:var(--oro);background:#1d1a12}
+.prob .q{color:var(--t)}
+.todobien{font-size:11.5px;color:#a9c08f}
+
+.pie{margin-top:12px;font-size:10.5px;color:#5f5e57;line-height:1.6;
+ border-top:1px solid var(--b);padding-top:9px}
+.pie code{color:var(--t)}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Merliot · <em>editor de cartas</em></h1>
+  <span class="ruta" id="ruta"></span>
+  <div class="acciones">
+    <span class="aviso" id="estado">cargando…</span>
+    <button class="btn" id="revertir">Descartar cambios</button>
+    <button class="btn primario" id="guardar" disabled>Guardar</button>
+  </div>
+</header>
+
+<div class="cols">
+
+  <!-- ── lista ── -->
+  <aside>
+    <div class="caja">
+      <div class="rot"><b>Cartas</b><span id="cuenta"></span></div>
+      <div class="filtros">
+        <input type="text" id="f-texto" placeholder="Buscar por nombre, id o texto…">
+        <div class="fila">
+          <select id="f-tipo"><option value="">todo tipo</option></select>
+          <select id="f-raza"><option value="">toda raza</option></select>
+        </div>
+        <div class="fila">
+          <select id="f-costo"><option value="">todo costo</option></select>
+          <select id="f-extra">
+            <option value="">sin filtro extra</option>
+            <option value="problema">sólo con problemas</option>
+            <option value="sinarte">sólo sin arte</option>
+            <option value="mazo">sólo las del mazo inicial</option>
+            <option value="noreparte">sólo las que no se reparten</option>
+          </select>
+        </div>
+      </div>
+      <ul class="lista" id="lista"></ul>
+      <div style="margin-top:9px;display:flex;gap:6px">
+        <button class="btn chico" id="nueva">+ Carta nueva</button>
+        <button class="btn chico" id="duplicar">Duplicar</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── editor ── -->
+  <main>
+    <div class="caja" id="editor"></div>
+  </main>
+
+  <!-- ── paneles ── -->
+  <section>
+    <div class="caja">
+      <div class="rot"><b>Cobertura del dado</b><span>bandas que producen</span></div>
+      <div class="mapa" id="mapa"></div>
+      <div class="nota" id="nota-dado"></div>
+    </div>
+
+    <div class="caja">
+      <div class="rot"><b>Curva de costos</b><span>cartas por cristal</span></div>
+      <div class="barras" id="curva"></div>
+    </div>
+
+    <div class="caja">
+      <div class="rot"><b>Reparto por recurso</b><span>bandas que lo dan</span></div>
+      <div class="barras" id="recursos"></div>
+    </div>
+
+    <div class="caja">
+      <div class="rot"><b>Reparto por raza</b></div>
+      <table class="reparto" id="razas"></table>
+      <div class="nota" id="nota-razas"></div>
+    </div>
+
+    <div class="caja">
+      <div class="rot"><b>Validación</b><span id="cuenta-probs"></span></div>
+      <ul class="probs" id="probs"></ul>
+    </div>
+  </section>
+</div>
+
+<div class="pie">
+  Escribe <code>data/merliot.json</code> de verdad, preservando el orden de las claves.
+  Los respaldos van a <code>tools/.respaldos/</code>.
+  Las otras secciones (criaturas, lugares, efímeros, terrenos, sitios, marcas) se editan a mano.
+</div>
+
+<script>
+"use strict";
+
+const RECURSOS = ["vigor","temple","destreza","saber"];
+const TIPOS = ["perm","mejora","amuleto","uso"];
+// Las cuatro que existen en los datos. Ojo: 'tintero' anda en el prototipo
+// pero Partida.cs todavía no la implementa.
+const PASIVAS = ["dobles","barato","escudo","tintero"];
+const EF_ENEMIGO = ["dmg","dmgTodos","dmgFondo","dmgDado","rotar","descartar","brota","cura"];
+const EF_USO = ["robar","nido","resolver","revivir","tresdados","huir"];
+const COLOR = {vigor:"#c9563f",temple:"#5f8fa8",destreza:"#8a9c55",saber:"#9a86c4"};
+
+let D = null;          // el documento entero
+let ORIGINAL = "";     // como vino del disco, para saber si hay cambios
+let sel = null;        // id de la carta seleccionada
+let conArte = new Set();
+
+const $ = (s) => document.querySelector(s);
+const el = (t, cls, txt) => { const n = document.createElement(t);
+  if (cls) n.className = cls; if (txt != null) n.textContent = txt; return n; };
+const ent = (v) => { const n = parseInt(v, 10); return Number.isFinite(n) ? n : 0; };
+
+// ── arranque ────────────────────────────────────────────────────────────
+async function arrancar() {
+  const [datos, arte, donde] = await Promise.all([
+    fetch("/datos").then(r => r.text()),
+    fetch("/arte").then(r => r.json()).catch(() => ({ids: []})),
+    fetch("/donde").then(r => r.json()).catch(() => ({})),
+  ]);
+  ORIGINAL = datos;
+  D = JSON.parse(datos);
+  conArte = new Set(arte.ids || []);
+  $("#ruta").textContent = donde.archivo || "";
+  llenarFiltros();
+  if (D.cartas.length) sel = D.cartas[0].id;
+  pintarTodo();
+}
+
+function llenarFiltros() {
+  const t = $("#f-tipo");
+  TIPOS.forEach(x => t.append(new Option(x, x)));
+  const r = $("#f-raza");
+  (D.razas || []).forEach(x => r.append(new Option(x.nombre, x.id)));
+  const c = $("#f-costo");
+  [...new Set(D.cartas.map(x => x.costoCristales | 0))].sort((a, b) => a - b)
+    .forEach(x => c.append(new Option(x + " cristal" + (x === 1 ? "" : "es"), x)));
+  ["#f-texto","#f-tipo","#f-raza","#f-costo","#f-extra"]
+    .forEach(s => $(s).addEventListener("input", pintarLista));
+}
+
+// ── estado sucio ────────────────────────────────────────────────────────
+function serializado() { return JSON.stringify(D, null, 2) + "\n"; }
+function sucio() { return serializado() !== ORIGINAL; }
+
+function pintarEstado() {
+  const probs = validar();
+  const errores = probs.filter(p => !p.warn).length;
+  const e = $("#estado");
+  $("#guardar").disabled = !sucio();
+  if (errores) { e.className = "aviso malo";
+    e.textContent = errores + (errores === 1 ? " problema" : " problemas"); }
+  else if (sucio()) { e.className = "aviso sucio"; e.textContent = "sin guardar"; }
+  else { e.className = "aviso bien"; e.textContent = "guardado"; }
+}
+
+function pintarTodo() { pintarLista(); pintarEditor(); pintarPaneles(); pintarEstado(); }
+
+// ── lista ───────────────────────────────────────────────────────────────
+function visibles() {
+  const q = $("#f-texto").value.trim().toLowerCase();
+  const tipo = $("#f-tipo").value, raza = $("#f-raza").value;
+  const costo = $("#f-costo").value, extra = $("#f-extra").value;
+  const rotas = new Set(validar().filter(p => p.id).map(p => p.id));
+  const enMazo = new Set((D.mazoInicial || []).map(e => e.carta));
+  return D.cartas.filter(c => {
+    if (q && !((c.nombre + " " + c.id + " " + (c.texto || "") + " " +
+        (c.efectoTexto || "")).toLowerCase().includes(q))) return false;
+    if (tipo && c.tipo !== tipo) return false;
+    if (raza && c.raza !== raza && c.soloRaza !== raza) return false;
+    if (costo !== "" && (c.costoCristales | 0) !== +costo) return false;
+    if (extra === "problema" && !rotas.has(c.id)) return false;
+    if (extra === "sinarte" && conArte.has(c.id)) return false;
+    if (extra === "mazo" && !enMazo.has(c.nombre)) return false;
+    if (extra === "noreparte" && (c.copias | 0) > 0) return false;
+    return true;
+  });
+}
+
+function pintarLista() {
+  const ul = $("#lista"); ul.textContent = "";
+  const rotas = new Set(validar().filter(p => p.id).map(p => p.id));
+  const v = visibles();
+  $("#cuenta").textContent = v.length === D.cartas.length
+    ? D.cartas.length + " cartas" : v.length + " de " + D.cartas.length;
+  if (!v.length) { ul.append(el("li", "vacio", "Nada con esos filtros.")); return; }
+  for (const c of v) {
+    const li = el("li", "it" + (c.id === sel ? " sel" : "") + (rotas.has(c.id) ? " roto" : ""));
+    li.append(el("span", "tp " + c.tipo, c.tipo));
+    li.append(el("span", "nm", c.nombre));
+    li.append(el("span", "cost", (c.costoCristales | 0) + "◈"));
+    li.onclick = () => { sel = c.id; pintarLista(); pintarEditor(); pintarPaneles(); };
+    ul.append(li);
+  }
+}
+
+// ── editor ──────────────────────────────────────────────────────────────
+function cartaSel() { return D.cartas.find(c => c.id === sel); }
+
+function campo(padre, etiqueta, pista, nodo, ancho) {
+  const d = el("div", "campo" + (ancho ? " ancho" : ""));
+  const l = el("label", null, etiqueta);
+  if (pista) l.append(el("span", "pista", pista));
+  d.append(l, nodo); padre.append(d); return nodo;
+}
+
+function entrada(valor, alCambiar, tipo = "text") {
+  const i = document.createElement("input");
+  i.type = tipo; i.value = valor == null ? "" : valor;
+  if (tipo === "number") i.step = "1";
+  i.addEventListener("input", () => alCambiar(tipo === "number" ? ent(i.value) : i.value));
+  return i;
+}
+
+function opciones(valor, lista, alCambiar, vacio) {
+  const s = document.createElement("select");
+  if (vacio != null) s.append(new Option(vacio, ""));
+  lista.forEach(o => s.append(new Option(o.n || o, o.v != null ? o.v : o)));
+  // Si el dato trae un valor que no está en la lista, entra igual y queda
+  // marcado. Sin esto el select cae a "" y borra el campo apenas lo tocás.
+  const hay = [...s.options].some(o => o.value === (valor || ""));
+  if (valor && !hay) s.append(new Option(valor + " (no reconocido)", valor));
+  s.value = valor == null ? "" : valor;
+  s.addEventListener("change", () => alCambiar(s.value));
+  return s;
+}
+
+/** Todo cambio pasa por acá: toca el dato y repinta las consecuencias. */
+function cambio() { pintarPaneles(); pintarEstado(); pintarLista(); }
+
+function pintarEditor() {
+  const box = $("#editor"); box.textContent = "";
+  const c = cartaSel();
+  if (!c) { box.append(el("div", "vacio", "Elegí una carta de la lista.")); return; }
+
+  const rot = el("div", "rot");
+  rot.append(el("b", null, c.nombre));
+  const der = el("span", null, conArte.has(c.id) ? "con arte" : "sin arte todavía");
+  rot.append(der); box.append(rot);
+
+  const g = el("div", "campos"); box.append(g);
+
+  // El id es la llave del arte (Arte/Cartas/{id}.png) y en C# hay búsquedas por
+  // id literal. Renombrar la carta se hace en 'nombre'; el id no se toca.
+  const idIn = entrada(c.id, () => {});
+  idIn.readOnly = true; idIn.className = "fijo";
+  idIn.title = "El id es estable: el arte se busca por id y el código lo referencia.";
+  campo(g, "id", "no se cambia", idIn);
+
+  campo(g, "nombre", null, entrada(c.nombre, v => { renombrar(c, v); cambio(); }));
+
+  campo(g, "tipo", null, opciones(c.tipo, TIPOS, v => {
+    // Cambiar de tipo tira campos: mejor avisar que borrar en silencio.
+    const pierde = seVaAPerder(c, v);
+    if (pierde.length && !confirm(`Cambiar a ${v} borra: ${pierde.join(", ")}.\n¿Seguimos?`)) {
+      pintarEditor(); return;
+    }
+    c.tipo = v; limpiarSegunTipo(c); pintarEditor(); cambio();
+  }));
+
+  campo(g, "copias", "0 = no se reparte",
+    entrada(c.copias | 0, v => { c.copias = v; cambio(); }, "number"));
+  campo(g, "costo", "cristales",
+    entrada(c.costoCristales | 0, v => { c.costoCristales = v; cambio(); }, "number"));
+
+  if (c.tipo === "perm") {
+    campo(g, "raza", null, opciones(c.raza, (D.razas || []).map(r => ({n: r.nombre, v: r.id})),
+      v => { v ? c.raza = v : delete c.raza; cambio(); }, "sin raza"));
+    campo(g, "vida", null, entrada(c.vida | 0, v => { c.vida = v; cambio(); }, "number"));
+  }
+  if (c.tipo === "mejora") {
+    campo(g, "sólo raza", "opcional",
+      opciones(c.soloRaza, (D.razas || []).map(r => ({n: r.nombre, v: r.id})),
+        v => { v ? c.soloRaza = v : delete c.soloRaza; cambio(); }, "cualquiera"));
+  }
+  if (c.tipo === "amuleto") {
+    campo(g, "pasiva", null, opciones(c.pasiva, PASIVAS,
+      v => { v ? c.pasiva = v : delete c.pasiva; cambio(); }, "ninguna"));
+  }
+
+  const ta = document.createElement("textarea");
+  ta.value = c.texto || "";
+  ta.addEventListener("input", () => { c.texto = ta.value; cambio(); });
+  campo(g, "texto", "el de sabor", ta, true);
+
+  if (c.tipo === "amuleto" || c.tipo === "uso") {
+    const t2 = document.createElement("textarea");
+    t2.value = c.efectoTexto || "";
+    t2.addEventListener("input", () => { t2.value ? c.efectoTexto = t2.value
+      : delete c.efectoTexto; cambio(); });
+    campo(g, "texto del efecto", "lo que hace, en palabras", t2, true);
+  }
+
+  if (c.tipo === "perm") bloqueAlCaer(box, c);
+  if (c.tipo === "uso") bloqueEfecto(box, c);
+  if (c.tipo === "perm" || c.tipo === "mejora") bloqueBandas(box, c);
+}
+
+function renombrar(c, nuevo) {
+  const viejo = c.nombre;
+  c.nombre = nuevo;
+  // mazoInicial referencia las cartas por nombre, no por id: si no se
+  // actualiza acá, renombrar una carta vacía el mazo de salida en silencio.
+  for (const e of D.mazoInicial || []) if (e.carta === viejo) e.carta = nuevo;
+}
+
+function seVaAPerder(c, nuevo) {
+  const p = [];
+  if (nuevo !== "perm") {
+    if (c.raza) p.push("raza");
+    if (c.vida != null) p.push("vida");
+    if (c.alCaer) p.push("al caer");
+  }
+  if (nuevo !== "mejora" && c.soloRaza) p.push("sólo raza");
+  if (nuevo !== "amuleto" && c.pasiva) p.push("pasiva");
+  if (nuevo !== "uso" && c.efecto && Object.keys(c.efecto).length) p.push("efecto");
+  if ((nuevo === "amuleto" || nuevo === "uso") && (c.bandas || []).length)
+    p.push((c.bandas.length) + " banda" + (c.bandas.length === 1 ? "" : "s"));
+  return p;
+}
+
+function limpiarSegunTipo(c) {
+  if (c.tipo !== "perm") { delete c.raza; delete c.vida; delete c.alCaer; }
+  else if (c.vida == null) c.vida = 1;
+  if (c.tipo !== "mejora") delete c.soloRaza;
+  if (c.tipo !== "amuleto") delete c.pasiva;
+  if (c.tipo !== "uso") delete c.efecto;
+  if (c.tipo === "amuleto" || c.tipo === "uso") delete c.bandas;
+  else if (!c.bandas) c.bandas = [];
+}
+
+function bloqueAlCaer(box, c) {
+  const gr = el("div", "grupo");
+  const rot = el("div", "rot"); rot.append(el("b", null, "Al caer"));
+  const b = el("button", "btn chico", c.alCaer ? "quitar" : "agregar");
+  b.onclick = () => { c.alCaer ? delete c.alCaer : c.alCaer = {cris: 0, curaTodos: 0};
+    pintarEditor(); cambio(); };
+  rot.append(b); gr.append(rot);
+  if (c.alCaer) {
+    const m = el("div", "mini");
+    campo(m, "cristales", null, entrada(c.alCaer.cris | 0,
+      v => { c.alCaer.cris = v; cambio(); }, "number"));
+    campo(m, "cura a todos", null, entrada(c.alCaer.curaTodos | 0,
+      v => { c.alCaer.curaTodos = v; cambio(); }, "number"));
+    gr.append(m);
+  }
+  box.append(gr);
+}
+
+function bloqueEfecto(box, c) {
+  const gr = el("div", "grupo");
+  const rot = el("div", "rot");
+  rot.append(el("b", null, "Efecto"));
+  rot.append(el("span", null, "sólo lo distinto de cero se guarda"));
+  gr.append(rot);
+  if (!c.efecto) c.efecto = {};
+  const m = el("div", "mini");
+  for (const k of EF_USO.concat(["cura"])) {
+    campo(m, k, null, entrada(c.efecto[k] | 0, v => {
+      v ? c.efecto[k] = v : delete c.efecto[k]; cambio(); }, "number"));
+  }
+  gr.append(m);
+
+  const sub = el("div", "grupo");
+  const r2 = el("div", "rot"); r2.append(el("b", null, "Da recursos de una"));
+  sub.append(r2);
+  if (!c.efecto.dar) c.efecto.dar = {};
+  sub.append(cuatroRecursos(c.efecto.dar));
+  gr.append(sub);
+  box.append(gr);
+}
+
+function cuatroRecursos(obj) {
+  const d = el("div", "rec4");
+  for (const r of RECURSOS) {
+    const c = el("div", "rec");
+    const l = el("label");
+    const p = el("span", "pip " + r); l.append(p, document.createTextNode(r));
+    c.append(l, entrada(obj[r] | 0, v => { v ? obj[r] = v : delete obj[r]; cambio(); }, "number"));
+    d.append(c);
+  }
+  return d;
+}
+
+function bloqueBandas(box, c) {
+  const gr = el("div", "grupo");
+  const rot = el("div", "rot");
+  rot.append(el("b", null, "Bandas"));
+  const add = el("button", "btn chico", "+ banda");
+  add.onclick = () => { (c.bandas = c.bandas || []).push({desde: 7, hasta: 7, produce: {vigor: 1}});
+    pintarEditor(); cambio(); };
+  rot.append(add); gr.append(rot);
+
+  (c.bandas || []).forEach((b, i) => {
+    const d = el("div", "banda");
+    d.style.borderLeftColor = colorDeBanda(b);
+    const cab = el("div", "cab");
+    cab.append(el("span", "rango", b.desde === b.hasta ? String(b.desde) : b.desde + "–" + b.hasta));
+
+    const wd = el("div", "campo");
+    wd.append(el("label", null, "desde"),
+      entrada(b.desde, v => { b.desde = v; pintarEditor(); cambio(); }, "number"));
+    const wh = el("div", "campo");
+    wh.append(el("label", null, "hasta"),
+      entrada(b.hasta, v => { b.hasta = v; pintarEditor(); cambio(); }, "number"));
+    cab.append(wd, wh);
+
+    const del = el("button", "btn chico peligro", "quitar");
+    del.onclick = () => { c.bandas.splice(i, 1); pintarEditor(); cambio(); };
+    cab.append(del);
+    d.append(cab);
+
+    if (!b.produce) b.produce = {};
+    d.append(cuatroRecursos(b.produce));
+
+    const m = el("div", "mini");
+    for (const k of ["cristales", "cura", "roba"]) {
+      campo(m, k, null, entrada(b[k] | 0, v => { v ? b[k] = v : delete b[k]; cambio(); }, "number"));
+    }
+    campo(m, "por cada raza", "multiplica",
+      opciones(b.porCadaRaza, (D.razas || []).map(r => ({n: r.nombre, v: r.id})),
+        v => { v ? b.porCadaRaza = v : delete b.porCadaRaza; cambio(); }, "no"));
+    d.append(m);
+    gr.append(d);
+  });
+  if (!(c.bandas || []).length) gr.append(el("div", "vacio", "Sin bandas: no produce nada."));
+  box.append(gr);
+}
+
+function colorDeBanda(b) {
+  const r = RECURSOS.filter(x => (b.produce || {})[x] > 0);
+  return r.length === 1 ? COLOR[r[0]] : "var(--b2)";
+}
+
+// ── paneles ─────────────────────────────────────────────────────────────
+function bandasDe(c) { return c.bandas || []; }
+
+function pintarPaneles() { mapaDelDado(); curvaDeCostos(); porRecurso(); porRaza(); listarProblemas(); }
+
+/* Cobertura del dado. Rejilla 4 recursos × 11 resultados: la fila dice qué
+   recurso es (posición, no color) y la celda cuántas bandas lo producen ahí.
+   La tira de abajo es la que importa de verdad: si un resultado queda pelado,
+   ese turno no producís nada y el invariante 6 se rompe. */
+function mapaDelDado() {
+  const m = $("#mapa"); m.textContent = "";
+  const cuenta = {}, total = {};
+  for (const r of RECURSOS) cuenta[r] = {};
+  for (let v = 2; v <= 12; v++) { total[v] = 0; for (const r of RECURSOS) cuenta[r][v] = 0; }
+
+  const mias = new Set();
+  const sc = cartaSel();
+  for (const c of D.cartas) {
+    for (const b of bandasDe(c)) {
+      for (let v = Math.max(2, b.desde); v <= Math.min(12, b.hasta); v++) {
+        let dio = false;
+        for (const r of RECURSOS) if ((b.produce || {})[r] > 0) { cuenta[r][v]++; dio = true; }
+        if (dio) total[v]++;
+        if (sc && c.id === sc.id) for (const r of RECURSOS)
+          if ((b.produce || {})[r] > 0) mias.add(r + ":" + v);
+      }
+    }
+  }
+
+  m.append(el("div", "fila-rot", ""));
+  for (let v = 2; v <= 12; v++) m.append(el("div", "eje", String(v)));
+
+  const tope = Math.max(1, ...RECURSOS.flatMap(r => Object.values(cuenta[r])));
+  for (const r of RECURSOS) {
+    const rot = el("div", "fila-rot");
+    rot.append(el("span", "pip " + r), document.createTextNode(r.slice(0, 4)));
+    m.append(rot);
+    for (let v = 2; v <= 12; v++) {
+      const n = cuenta[r][v];
+      const cel = el("div", "celda" + (n ? "" : " cero") + (mias.has(r + ":" + v) ? " mia" : ""),
+        n ? String(n) : "·");
+      if (n) cel.style.background = mezcla(COLOR[r], n / tope);
+      cel.title = `${r} con ${v}: ${n} banda${n === 1 ? "" : "s"}`;
+      m.append(cel);
+    }
+  }
+
+  m.append(el("div", "fila-rot", "total"));
+  for (let v = 2; v <= 12; v++) {
+    const t = el("div", "total" + (total[v] ? "" : " pelado"), String(total[v]));
+    t.title = total[v] ? `${total[v]} bandas producen con ${v}`
+      : `Nadie produce con ${v}: ese turno el jugador no hace nada`;
+    m.append(t);
+  }
+
+  const pelados = [];
+  for (let v = 2; v <= 12; v++) if (!total[v]) pelados.push(v);
+  $("#nota-dado").innerHTML = pelados.length
+    ? `Sin producción con <b>${pelados.join(", ")}</b>. Ese turno el jugador mira y no hace nada.`
+    : "Todos los resultados del 2 al 12 producen algo.";
+}
+
+/** El color de la celda es intensidad dentro del hue del recurso; el número
+    que lleva adentro es el dato exacto, así que el color nunca es la única vía. */
+function mezcla(hex, t) {
+  const a = 0.16 + 0.84 * Math.min(1, t);
+  const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16),
+        b = parseInt(hex.slice(5, 7), 16);
+  const f = (x) => Math.round(20 + (x - 20) * a);
+  return `rgb(${f(r)},${f(g)},${f(b)})`;
+}
+
+function barras(destino, filas, resaltar) {
+  const d = $(destino); d.textContent = "";
+  const tope = Math.max(1, ...filas.map(f => f.n));
+  for (const f of filas) {
+    const fila = el("div", "barra" + (resaltar === f.k ? " aca" : ""));
+    const et = el("div", "et");
+    if (f.color) { const p = el("span", "pip"); p.style.background = f.color; et.append(p); }
+    et.append(document.createTextNode(f.et));
+    const pista = el("div", "pista-b"); const i = el("i");
+    i.style.width = (100 * f.n / tope) + "%";
+    if (f.color) i.style.background = f.color;
+    pista.append(i);
+    fila.append(et, pista, el("div", "val", String(f.n)));
+    fila.title = f.et + ": " + f.n;
+    d.append(fila);
+  }
+}
+
+function curvaDeCostos() {
+  const b = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0};
+  for (const c of D.cartas) {
+    const k = Math.min(4, Math.max(0, c.costoCristales | 0));
+    b[k]++;
+  }
+  const sc = cartaSel();
+  const mio = sc ? Math.min(4, Math.max(0, sc.costoCristales | 0)) : null;
+  barras("#curva", [0, 1, 2, 3, 4].map(k => ({
+    k, et: k === 4 ? "4 o más" : k + " cristal" + (k === 1 ? "" : "es"), n: b[k],
+  })), mio);
+}
+
+function porRecurso() {
+  const n = {}; for (const r of RECURSOS) n[r] = 0;
+  for (const c of D.cartas) for (const b of bandasDe(c))
+    for (const r of RECURSOS) if ((b.produce || {})[r] > 0) n[r]++;
+  barras("#recursos", RECURSOS.map(r => ({k: r, et: r, n: n[r], color: COLOR[r]})));
+}
+
+function porRaza() {
+  const t = $("#razas"); t.textContent = "";
+  const cab = t.insertRow();
+  ["raza", "héroes", "mejoras propias"].forEach(x => {
+    const th = document.createElement("th"); th.textContent = x; cab.append(th);
+  });
+  const flojas = [];
+  for (const r of D.razas || []) {
+    const h = D.cartas.filter(c => c.tipo === "perm" && c.raza === r.id).length;
+    const m = D.cartas.filter(c => c.tipo === "mejora" && c.soloRaza === r.id).length;
+    const fila = t.insertRow();
+    if (h > 0 && m === 0) { fila.className = "floja"; flojas.push(r.nombre); }
+    fila.insertCell().textContent = r.nombre;
+    fila.insertCell().textContent = h;
+    fila.insertCell().textContent = m;
+  }
+  $("#nota-razas").innerHTML = flojas.length
+    ? `<b>${flojas.join(", ")}</b>: tiene héroes pero ninguna mejora propia, así que no tiene arquetipo.`
+    : "Todas las razas con héroes tienen al menos una mejora propia.";
+}
+
+// ── validación en vivo (los invariantes del CLAUDE.md) ──────────────────
+function validar() {
+  if (!D) return [];
+  const p = [];
+  const err = (id, q) => p.push({id, q});
+  const warn = (id, q) => p.push({id, q, warn: true});
+
+  const razas = new Set((D.razas || []).map(r => r.id));
+  const ids = new Set();
+  const nombres = new Set();
+
+  for (const c of D.cartas) {
+    const q = c.nombre || c.id;
+    if (ids.has(c.id)) err(c.id, `${q}: el id está repetido`);
+    ids.add(c.id);
+    if (!c.nombre) err(c.id, `${c.id}: sin nombre`);
+    else if (nombres.has(c.nombre)) err(c.id, `${q}: hay otra carta con el mismo nombre`);
+    nombres.add(c.nombre);
+
+    if (c.tipo === "perm") {
+      if ((c.vida | 0) <= 0) err(c.id, `${q}: héroe sin vida`);            // inv. 2
+      if (!bandasDe(c).length) err(c.id, `${q}: héroe sin bandas`);        // inv. 2
+      if (c.raza && !razas.has(c.raza)) err(c.id, `${q}: raza '${c.raza}' no existe`); // inv. 4
+    }
+    if (c.tipo === "mejora" && c.soloRaza && !razas.has(c.soloRaza))
+      err(c.id, `${q}: soloRaza '${c.soloRaza}' no existe`);               // inv. 4
+    if (c.tipo === "amuleto" && !PASIVAS.includes(c.pasiva || ""))
+      err(c.id, `${q}: pasiva '${c.pasiva || "—"}' no existe (${PASIVAS.join(", ")})`);
+    if ((c.costoCristales | 0) < 0) err(c.id, `${q}: costo negativo`);
+
+    for (const b of bandasDe(c)) {
+      if (!(b.desde >= 2 && b.desde <= b.hasta && b.hasta <= 12))          // inv. 1
+        err(c.id, `${q}: banda ${b.desde}–${b.hasta} fuera del 2–12`);
+      const da = RECURSOS.some(r => (b.produce || {})[r] > 0)
+        || (b.cristales | 0) || (b.cura | 0) || (b.roba | 0);
+      if (!da) err(c.id, `${q}: la banda ${b.desde}–${b.hasta} no da nada`);
+      if (b.porCadaRaza && !razas.has(b.porCadaRaza))
+        err(c.id, `${q}: porCadaRaza '${b.porCadaRaza}' no existe`);
+    }
+  }
+
+  // inv. 6 — cobertura del dado
+  const cubre = new Set();
+  for (const c of D.cartas) for (const b of bandasDe(c))
+    if (RECURSOS.some(r => (b.produce || {})[r] > 0))
+      for (let v = Math.max(2, b.desde); v <= Math.min(12, b.hasta); v++) cubre.add(v);
+  for (let v = 2; v <= 12; v++)
+    if (!cubre.has(v)) warn(null, `Ninguna carta produce con ${v}`);
+
+  // inv. 10 — el mazo de salida existe de verdad
+  for (const e of D.mazoInicial || []) {
+    if (!nombres.has(e.carta)) err(null, `Mazo inicial: '${e.carta}' no está en cartas`);
+    if ((e.copias | 0) < 1) err(null, `Mazo inicial: '${e.carta}' con ${e.copias} copias`);
+  }
+  return p;
+}
+
+function listarProblemas() {
+  const ul = $("#probs"); ul.textContent = "";
+  const p = validar();
+  const errores = p.filter(x => !x.warn).length;
+  $("#cuenta-probs").textContent = p.length
+    ? errores + " error" + (errores === 1 ? "" : "es") + (p.length - errores ? ` · ${p.length - errores} aviso` : "")
+    : "";
+  if (!p.length) { ul.append(el("li", "todobien", "Sin problemas. Los invariantes se cumplen.")); return; }
+  for (const x of p) {
+    const li = el("li", "prob" + (x.warn ? " warn" : ""));
+    li.append(el("span", "q", x.q));
+    if (x.id) li.onclick = () => { sel = x.id; pintarLista(); pintarEditor(); pintarPaneles(); };
+    ul.append(li);
+  }
+}
+
+// ── acciones ────────────────────────────────────────────────────────────
+function idLibre(base) {
+  let i = 2, id = base;
+  while (D.cartas.some(c => c.id === id)) id = base + "-" + (i++);
+  return id;
+}
+
+const aId = (s) => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+  .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "carta";
+
+$("#nueva").onclick = () => {
+  const c = {id: idLibre("carta-nueva"), nombre: "Carta nueva", tipo: "perm",
+    copias: 1, costoCristales: 2, texto: "", raza: (D.razas[0] || {}).id, vida: 3,
+    bandas: [{desde: 7, hasta: 7, produce: {vigor: 1}}]};
+  D.cartas.push(c); sel = c.id; pintarTodo();
+};
+
+$("#duplicar").onclick = () => {
+  const c = cartaSel(); if (!c) return;
+  const copia = JSON.parse(JSON.stringify(c));
+  copia.nombre = c.nombre + " (copia)";
+  copia.id = idLibre(aId(copia.nombre));
+  D.cartas.splice(D.cartas.indexOf(c) + 1, 0, copia);
+  sel = copia.id; pintarTodo();
+};
+
+$("#revertir").onclick = () => {
+  if (sucio() && !confirm("Se pierden los cambios sin guardar. ¿Seguimos?")) return;
+  D = JSON.parse(ORIGINAL);
+  if (!D.cartas.some(c => c.id === sel)) sel = (D.cartas[0] || {}).id;
+  pintarTodo();
+};
+
+$("#guardar").onclick = async () => {
+  const b = $("#guardar"); b.disabled = true; b.textContent = "Guardando…";
+  try {
+    const r = await fetch("/datos", {method: "PUT",
+      headers: {"Content-Type": "application/json"}, body: JSON.stringify(D)});
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.error || r.statusText);
+    // Vuelvo a leer del disco: lo que quedó guardado es lo canonizado por el
+    // servidor, no lo que mandé, y así el indicador de "sin guardar" no miente.
+    ORIGINAL = await fetch("/datos").then(x => x.text());
+    D = JSON.parse(ORIGINAL);
+    if (!D.cartas.some(c => c.id === sel)) sel = (D.cartas[0] || {}).id;
+    pintarTodo();
+  } catch (e) {
+    alert("No se guardó: " + e.message);
+  } finally {
+    b.textContent = "Guardar"; pintarEstado();
+  }
+};
+
+addEventListener("keydown", (e) => {
+  if ((e.metaKey || e.ctrlKey) && e.key === "s") { e.preventDefault();
+    if (!$("#guardar").disabled) $("#guardar").click(); }
+});
+
+addEventListener("beforeunload", (e) => { if (sucio()) e.preventDefault(); });
+
+arrancar().catch(e => { document.body.textContent = "No pude arrancar: " + e.message; });
+</script>
+</body>
+</html>
