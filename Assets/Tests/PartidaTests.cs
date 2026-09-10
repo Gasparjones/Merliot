@@ -41,11 +41,14 @@ namespace Merliot.Tests
         }
 
         [Test]
-        public void ElMazoTraeTodasLasCopias()
+        public void SalisDeLaAbadiaConElMazoInicialYNadaMas()
         {
+            // El catálogo entero no se reparte: es el pozo de recompensas.
             var p = Nueva();
-            int esperadas = datos.cartas.Sum(c => c.copias);
+            int esperadas = datos.mazoInicial.Sum(e => e.copias);
             Assert.AreEqual(esperadas, p.mazo.Count + p.mano.Count);
+            Assert.Less(esperadas, datos.cartas.Sum(c => c.copias),
+                        "el mazo de salida tiene que ser más chico que el catálogo");
             Assert.AreEqual(datos.reglas.manoInicial, p.mano.Count);
             Assert.AreEqual(datos.reglas.cristalesIniciales, p.cris);
         }
@@ -162,20 +165,52 @@ namespace Merliot.Tests
         }
 
         [Test]
+        public void ElTerrenoAbreConAlgoEnElTurnoUno()
+        {
+            var p = Nueva();
+            p.party.Add(new Heroe { carta = Heroe("Aguanta", 20), vida = 20 });
+            p.Empezar();
+            var primera = datos.terrenos[0].apariciones.First(a => a.turno == 1);
+            Assert.IsTrue(p.enemigos.Any(e => e.nombre == primera.n),
+                          $"en el turno 1 tendría que aparecer {primera.n}");
+        }
+
+        [Test]
         public void CerrarElTurnoCobraRobaYAbreLoQueToca()
         {
             var p = Nueva();
             p.party.Add(new Heroe { carta = Heroe("Aguanta", 20), vida = 20 });
             p.Empezar();
-            int cristales = p.cris, enMano = p.mano.Count;
+            int cristales = p.cris;
             p.TirarFijo(6, 6);   // 12: no dispara nada del terreno
             p.Terminar();
 
             Assert.AreEqual(cristales + datos.reglas.cristalesPorTurno, p.cris);
             Assert.LessOrEqual(p.mano.Count, datos.reglas.limiteMano);
-            Assert.IsTrue(p.enemigos.Any(e => e.nombre == "Broten mayor"),
-                          "en el turno 2 tendría que aparecer el Broten mayor");
-            Assert.AreEqual(1, p.efimeros.Count, "y un efímero por turno");
+            Assert.AreEqual(2, p.turno);
+            Assert.AreEqual(1, p.efimeros.Count, "un efímero por turno a partir del segundo");
+        }
+
+        [Test]
+        public void LosEfimerosQueNecesitanMarcaNoEntranSinElla()
+        {
+            var p = Nueva();
+            var conMarca = datos.efimeros.Where(e => !string.IsNullOrEmpty(e.requiere)).ToList();
+            Assert.IsNotEmpty(conMarca, "los datos traen efímeros condicionados por marca");
+            foreach (int nivel in new[] { 1, 2, 3 })
+                foreach (var e in p.MazoEfimeros(nivel))
+                    Assert.IsTrue(string.IsNullOrEmpty(e.requiere),
+                        $"{e.nombre} entró al mazo sin la marca '{e.requiere}'");
+        }
+
+        [Test]
+        public void LasMarcasAbrenContenidoQueSinEllasNoExiste()
+        {
+            var p = Nueva();
+            var e = datos.efimeros.First(x => !string.IsNullOrEmpty(x.requiere));
+            p.marcas.Add(e.requiere);
+            Assert.IsTrue(p.MazoEfimeros(e.nivel).Any(x => x.id == e.id),
+                          $"con la marca '{e.requiere}', {e.nombre} tiene que poder salir");
         }
 
         [Test]

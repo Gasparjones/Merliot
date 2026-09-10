@@ -24,7 +24,9 @@ namespace Merliot.Tests
             Assert.IsNotNull(db.Data, "el JSON no cargó");
             // La semilla y las mutaciones están en el catálogo con copias 0: entran
             // por la campaña, no por el mazo. Lo que se fija acá es lo repartible.
-            Assert.AreEqual(51, db.Data.cartas.Count(c => c.copias > 0), "cambió el mazo");
+            Assert.Greater(db.Data.cartas.Count(c => c.copias > 0), 0, "no hay nada repartible");
+            Assert.AreEqual(db.Data.cartas.Count - 2, db.Data.cartas.Count(c => c.copias > 0),
+                            "las únicas cartas con copias 0 son la semilla y la mutación");
             Assert.IsTrue(db.Data.cartas.Any(c => c.id == "la-semilla"), "falta la semilla");
 
             var carta = GameObject.Find("carta");

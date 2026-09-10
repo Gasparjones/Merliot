@@ -69,6 +69,8 @@ namespace Merliot
         public bool tresdados, yaRetiro, gano, semilla;
         public string motivoFin;
         public readonly List<string> ruta = new List<string>();
+        /// Las marcas son hechos, no cartas ni recursos: se ganan una vez y no se pierden.
+        public readonly List<string> marcas = new List<string>();
         public Interludio interludio;
 
         public readonly List<Carta> mazo = new List<Carta>();
@@ -105,6 +107,16 @@ namespace Merliot
         public Carta LaMutacion => data.cartas.FirstOrDefault(c => c.id == "mutaci-n");
 
         int R(int n) => rnd.Next(n);
+
+        public bool Tenes(string marca) => !string.IsNullOrEmpty(marca) && marcas.Contains(marca);
+
+        void GanarMarca(string id)
+        {
+            if (string.IsNullOrEmpty(id) || marcas.Contains(id)) return;
+            marcas.Add(id);
+            var m = data.marcas?.FirstOrDefault(x => x.id == id);
+            Log($"<b>{m?.nombre ?? id}.</b> {m?.texto} Te lo vas a llevar puesto.");
+        }
         void Log(string s) => AlLoguear?.Invoke(s);
         void Pintar() => Cambio?.Invoke();
 
@@ -117,8 +129,14 @@ namespace Merliot
 
         public void Iniciar()
         {
-            foreach (var c in data.cartas)
-                for (int i = 0; i < c.copias; i++) mazo.Add(c);
+            // Salís de la abadía con lo que dice 'mazoInicial'. El resto del
+            // catálogo no se reparte: es lo que puede tocarte como recompensa.
+            foreach (var e in data.mazoInicial)
+            {
+                var c = data.cartas.FirstOrDefault(x => x.nombre == e.carta);
+                if (c == null) { Log($"[datos] el mazo inicial pide '{e.carta}', que no existe."); continue; }
+                for (int i = 0; i < e.copias; i++) mazo.Add(c);
+            }
             Barajar(mazo);
 
             efMazo.AddRange(MazoEfimeros(1));
@@ -165,7 +183,8 @@ namespace Merliot
         public List<Efimero> MazoEfimeros(int nivel)
         {
             var m = new List<Efimero>();
-            foreach (var e in data.efimeros.Where(e => e.nivel <= nivel && e.nivel >= nivel - 1))
+            foreach (var e in data.efimeros.Where(e => e.nivel <= nivel && e.nivel >= nivel - 1)
+                                           .Where(e => string.IsNullOrEmpty(e.requiere) || Tenes(e.requiere)))
             { m.Add(e); m.Add(e); }
             Barajar(m);
             return m;
@@ -193,12 +212,25 @@ namespace Merliot
                                   bandas = b.bandas, vida = b.vida, vidaMax = b.vida };
                 Log($"Aparece <b>{e.nombre}</b>.");
             }
+            else if (q == "sitio")
+            {
+                // TODO: los sitios todavía no están en Unity. Están en el JSON y en el
+                // prototipo: no se destruyen, se usan, y no cuentan para limpiar el terreno.
+                return;
+            }
             else
             {
                 var b = data.lugares.FirstOrDefault(x => x.nombre == nombre);
                 if (b == null) return;
+                var costo = b.costo;
+                if (b.descuento != null && b.descuento.Hay && Tenes(b.descuento.marca))
+                {
+                    costo = costo.Copia();
+                    costo.Sumar(b.descuento.r, -b.descuento.n);
+                    Log($"Lo que sabés te ahorra {b.descuento.n} de {b.descuento.r} en <b>{b.nombre}</b>.");
+                }
                 e = new Enemigo { nombre = b.nombre, texto = b.texto, esCriatura = false,
-                                  bandas = b.bandas, costo = b.costo, pagado = new Produccion() };
+                                  bandas = b.bandas, costo = costo, pagado = new Produccion() };
                 Log($"Encontrás <b>{e.nombre}</b>. No se mata: se desarma.");
             }
             enemigos.Add(e);
@@ -596,6 +628,7 @@ namespace Merliot
                 if (e.recompensa.cris > 0) { cris += e.recompensa.cris; extra += $" Te deja {e.recompensa.cris} de cristal."; }
             }
             Log($"<b>{e.nombre}</b>: {e.vias[via].texto.ToLower()}.{extra}");
+            GanarMarca(e.vias[via].marca);
             Pintar();
         }
 
@@ -611,6 +644,12 @@ namespace Merliot
             cris += data.reglas.cristalesPorTurno;
             Log("<b>Turno 1.</b> Un cristal más, robás y tirás.");
             Robar(data.reglas.robaPorTurno);
+
+            // Los terrenos abren con algo en el turno 1. Terminar() se ocupa de
+            // los turnos siguientes; el primero hay que abrirlo acá.
+            foreach (var ap in terreno.apariciones.Where(ap => ap.turno == 1))
+                AbrirEnemigo(ap.q, ap.n);
+
             Pintar();
         }
 
@@ -674,6 +713,7 @@ namespace Merliot
                         foreach (var x in Produccion.Todos) r.Sumar(x, b.produce.Get(x) * mult);
                     if (b.cristales > 0) cris += b.cristales;
                     if (b.cura > 0) Curar(b.cura);
+                    if (b.roba > 0) Robar(b.roba);
                     producen.Add(h.Nombre);
                 }
 
@@ -716,6 +756,7 @@ namespace Merliot
                 if (e.bueno) { Log($"Dejás pasar <b>{e.nombre}</b>."); continue; }
                 Log($"No llegaste a <b>{e.nombre}</b>.");
                 AplicarEfecto(e.efecto, e.nombre, null);
+                GanarMarca(e.marcaSiFalla);   // hay marcas que se ganan por no hacer algo
             }
             efimeros.Clear();
             if (party.Count == 0) { Fin(false, "No te queda nadie en pie."); return; }
@@ -834,6 +875,19 @@ namespace Merliot
 
             etapa++;
             terreno = t;
+            if (Tenes("arder"))
+            {
+                // Copio el terreno: los datos son compartidos y no se tocan.
+                terreno = new Terreno {
+                    id = t.id, nombre = t.nombre, etapa = t.etapa, intro = t.intro,
+                    problema = t.problema, ambiental = t.ambiental,
+                    efimerosPorTurno = t.efimerosPorTurno,
+                    apariciones = new List<Aparicion>(t.apariciones) };
+                terreno.apariciones.Add(new Aparicion {
+                    q = "criatura", n = "Lengua de fuego",
+                    turno = t.apariciones.Max(x => x.turno) + 2 });
+                Log("El fuego que dejaste arder viene con vos.");
+            }
             enemigos.Clear();
             efimeros.Clear();
             pendientes.Clear();

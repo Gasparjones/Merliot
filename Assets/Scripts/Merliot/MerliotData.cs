@@ -14,6 +14,7 @@ namespace Merliot
         public Produccion produce;   // puede venir null
         public int cristales;
         public int cura;
+        public int roba;             // cartas, no recursos
         public string porCadaRaza;   // multiplica la produccion por cuantos de esa raza tengas
         public bool Cubre(int tirada) => tirada >= desde && tirada <= hasta;
     }
@@ -80,7 +81,9 @@ namespace Merliot
         public int vida;                  // solo tipo perm
         public string soloRaza;           // solo tipo mejora
         public AlCaer alCaer;
-        public string pasiva;             // solo tipo amuleto: dobles | barato | escudo
+        // solo tipo amuleto: dobles | barato | escudo | tintero.
+        // 'tintero' (cambiar 3 de saber por una carta, siempre) todavía no la lee nadie.
+        public string pasiva;
         public string efectoTexto;
         public Efecto efecto;             // solo tipo uso
         public List<Banda> bandas;
@@ -95,14 +98,51 @@ namespace Merliot
         public List<BandaEnemiga> bandas;
     }
 
+    /// Un lugar cuesta menos si traés la marca: -n del recurso r.
+    /// JsonUtility no deja nulls, así que 'sin descuento' es marca vacía.
+    [Serializable] public class Descuento
+    {
+        public string marca;
+        public string r;
+        public int n;
+        public bool Hay => !string.IsNullOrEmpty(marca);
+    }
+
     [Serializable] public class Lugar
     {
         public string id, nombre, texto;
         public Produccion costo;          // pago acumulable entre turnos
+        public Descuento descuento;
         public List<BandaEnemiga> bandas;
     }
 
-    [Serializable] public class Via { public string texto; public Produccion costo; }
+    /// Un sitio no se destruye: se usa. El pago se acumula entre turnos y,
+    /// cuando se completa, cobrás y vuelve a quedar disponible.
+    /// No cuenta para limpiar el terreno.
+    [Serializable] public class Trueque
+    {
+        public Produccion costo;          // null en el JSON si se paga en cristales
+        public int cristales;
+        public int roba;
+        public int cura;
+        public string texto;
+        public bool EnCristales => cristales > 0;
+    }
+
+    [Serializable] public class Sitio
+    {
+        public string id, nombre, texto;
+        public Trueque trueque;
+    }
+
+    /// Un hecho que el juego se acuerda para siempre. Abre efímeros que si no
+    /// no existen (Efimero.requiere) y abarata lugares (Lugar.descuento).
+    [Serializable] public class Marca { public string id, nombre, texto; }
+
+    [Serializable] public class EntradaMazo { public string carta; public int copias; }
+
+    /// Algunas vías dejan marca: el hecho queda, aunque el efímero se vaya.
+    [Serializable] public class Via { public string texto; public Produccion costo; public string marca; }
 
     [Serializable] public class Recompensa { public int cura, carta, cris; }
 
@@ -111,6 +151,8 @@ namespace Merliot
         public string id, nombre, texto;
         public int nivel;                 // el mazo de efimeros rota por etapa, no crece
         public bool bueno;                // si no lo pagas, simplemente se va
+        public string requiere;           // sin esta marca no entra al mazo
+        public string marcaSiFalla;       // la marca se gana por NO resolverlo
         public List<Via> vias;
         public Efecto efecto;
         public Recompensa recompensa;
@@ -148,7 +190,10 @@ namespace Merliot
         public string version;
         public List<IdNombre> recursos;
         public List<IdNombre> razas;
+        public List<EntradaMazo> mazoInicial;   // con esto salís de la abadía
         public List<Carta> cartas;
+        public List<Sitio> sitios;
+        public List<Marca> marcas;
         public List<Criatura> criaturas;
         public List<Lugar> lugares;
         public List<Efimero> efimeros;
