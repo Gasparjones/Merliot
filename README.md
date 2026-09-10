@@ -10,7 +10,8 @@ Diseñado para mesa; el prototipo digital sirve para playtestear y ajustar núme
 | `prototipo/` | El prototipo jugable. Abrí `index.html` en cualquier navegador. No necesita servidor. |
 | `data/` | Todas las cartas, criaturas, lugares y efímeros en JSON. **Ésta es la fuente de verdad.** |
 | `docs/` | Reglas y notas de diseño. |
-| `unity/` | Scripts de C# para leer `data/merliot.json` desde Unity. |
+| `tools/` | El editor de cartas (`editor.py`) y los validadores en Node. |
+| `Assets/` | El proyecto de Unity. Más abajo. |
 
 ## La regla más importante del repo
 
@@ -21,8 +22,32 @@ el JSON pasa a ser el único lugar.
 
 ## Estado
 
-Prototipo funcional y balanceado a mano. Falta: arte, más terrenos,
-mapa de exploración, y la campaña de la semilla.
+Prototipo funcional y balanceado a mano, con la campaña entera. Falta: arte,
+más terrenos, y el mapa de exploración.
+
+En Unity está todo lo del prototipo menos los **sitios**: están en el JSON y andan
+en el prototipo web, pero `Partida.cs` todavía los saltea. Ver más abajo.
+
+## El editor de cartas
+
+```bash
+python3 tools/editor.py
+```
+
+Levanta un servidor local y abre el navegador. Se cambian nombres, stats, costos,
+bandas y efectos de cualquier carta, y al costado se ve en vivo lo que el cambio
+provoca: cobertura del dado, curva de costos, reparto por recurso y por raza, y los
+invariantes del `CLAUDE.md`. Filtra por tipo, raza y costo, duplica cartas, y marca
+las que todavía no tienen arte.
+
+Escribe `data/merliot.json` de verdad — no descarga una copia — y preserva el orden
+de las claves, así que el diff de git muestra sólo lo que tocaste. Antes de cada
+guardado deja un respaldo en `tools/.respaldos/`, y se niega a escribir si el
+resultado perdería una sección, repitiera un `id` o dejara el `mazoInicial`
+apuntando a una carta que ya no existe.
+
+Está en Python y no en Node como pedía el brief, nada más porque en esta máquina
+no hay `node`. Sólo usa la biblioteca estándar: no hay que instalar nada.
 
 ## Validar
 
@@ -61,6 +86,9 @@ una sola fuente de verdad** y la regla de oro del `CLAUDE.md` se mantiene.
 dejar una carta atrás, elegir ruta, siguen sólo los primeros cinco), la semilla,
 las mutaciones y la rotación del mazo de efímeros. Todo sale de `merliot.json`.
 
+Salís con el `mazoInicial` — 18 cartas —, no con el catálogo entero: el resto es
+lo que puede tocarte como recompensa.
+
 Dos cosas del prototipo web que acá se corrigieron, porque con la campaña se notan:
 
 - El nombre del terreno estaba fijo en el HTML, así que en la etapa 2 seguía diciendo
@@ -68,6 +96,28 @@ Dos cosas del prototipo web que acá se corrigieron, porque con la campaña se n
 - Los ids de terreno del prototipo (`lindes`) no coinciden con el del JSON
   (`lindes-de-urmand`). Se respetó el del JSON, que ya existía, y los nuevos usan
   los del prototipo.
+
+### Las marcas
+
+Una marca es un hecho que el juego se acuerda para siempre, y hace dos cosas:
+un efímero con `requiere` **no entra al mazo** si no la tenés, y un lugar con
+`descuento` cuesta menos si la tenés. `marcaSiFalla` da la marca por *no* resolver
+un efímero — así se gana `arder`, que te suma una criatura en el terreno siguiente.
+
+Están en `Partida.marcas`. Lo que falta es mostrarlas: en el prototipo hay un panel
+debajo del terreno y las vías avisan "deja marca" antes de que las elijas;
+`PantallaPartida.cs` todavía no dibuja nada de eso.
+
+### Los sitios: lo que falta portar
+
+Un sitio no se destruye, se usa: pagás un `trueque` (de a poco, acumulando entre
+turnos) y te da una carta o vida, y queda disponible otra vez. No cuenta para limpiar
+el terreno. Están en `merliot.json` bajo `sitios`, aparecen en `apariciones` con
+`q: "sitio"`, y el prototipo los tiene andando.
+
+`Partida.AbrirEnemigo` los saltea con un TODO: hace falta un tipo nuevo en el modelo
+de juego (el `Enemigo` actual asume que se mata o se desarma) y su parte en la
+pantalla. Mientras tanto los cuatro sitios no salen en el build de Unity.
 
 ### El visor
 
@@ -78,9 +128,10 @@ para mirar los datos, no una pantalla de juego.
 
 ### Validar y testear
 
+- `node tools/validar.js` y `node tools/chequeo-css.js`, sin abrir nada.
 - **Merliot → Validar datos** en el menú del editor: corre los invariantes del `CLAUDE.md`.
 - **Window → General → Test Runner → PlayMode**: chequea que el JSON llegue hasta la
-  pantalla y que las 51 cartas se dibujen sin romperse.
+  pantalla y que las cartas se dibujen sin romperse.
 
 Desde la terminal, sin abrir el editor:
 
