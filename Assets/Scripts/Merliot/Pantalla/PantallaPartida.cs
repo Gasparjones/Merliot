@@ -399,9 +399,8 @@ namespace Merliot
             var go = U.Nodo("dd", dados);
             U.Fondo(go, new Color(Paleta.Caja2.r, Paleta.Caja2.g, Paleta.Caja2.b, alfa));
             U.Borde(go, Paleta.Borde2);
-            var le = U.Elem(go);
-            le.minWidth = le.preferredWidth = 50;
-            le.minHeight = le.preferredHeight = 50;
+            U.Ancho(go, 50);      // Ancho() fija flexibleWidth en 0: sin esto el dado se estira
+            U.Alto(go, 50);
             var col = U.Col(go, 0, 0);
             col.childAlignment = TextAnchor.MiddleCenter;
             var t = U.Txt(go.transform, cara, 26, Paleta.Tinta, TextAnchor.MiddleCenter);

@@ -17,7 +17,10 @@ namespace Merliot
 
         void Awake()
         {
-            if (I != null && I != this) { Destroy(gameObject); return; }
+            // Destruyo el componente, no el objeto: en el objeto viaja también
+            // la pantalla de la escena que se está cargando, y llevársela puesta
+            // deja la escena muda.
+            if (I != null && I != this) { Destroy(this); return; }
             I = this;
             DontDestroyOnLoad(gameObject);
             Cargar();

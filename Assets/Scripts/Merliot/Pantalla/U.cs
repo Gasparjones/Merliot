@@ -43,12 +43,41 @@ namespace Merliot
             return img;
         }
 
-        public static Outline Borde(GameObject go, Color c, float grosor = 1f)
+        /// El borde son cuatro tiras finas ancladas a los lados, dentro de un hijo
+        /// marcado ignoreLayout para que ningún LayoutGroup lo mueva.
+        /// No uso Outline: dibuja copias corridas del gráfico, así que sobre un
+        /// fondo transparente (todos los botones) no se ve nada.
+        public static void Borde(GameObject go, Color c, float grosor = 1f)
         {
-            var o = Comp<Outline>(go);
-            o.effectColor = c;
-            o.effectDistance = new Vector2(grosor, grosor);
-            return o;
+            var previo = go.transform.Find("__marco");
+            if (previo != null)
+            {
+                foreach (var im in previo.GetComponentsInChildren<Image>()) im.color = c;
+                return;
+            }
+
+            var marco = Nodo("__marco", go.transform);
+            Comp<LayoutElement>(marco).ignoreLayout = true;
+            Estirar(marco.GetComponent<RectTransform>());
+
+            Lado(marco.transform, c, new Vector2(0, 1), new Vector2(1, 1), new Vector2(0.5f, 1), new Vector2(0, grosor));
+            Lado(marco.transform, c, new Vector2(0, 0), new Vector2(1, 0), new Vector2(0.5f, 0), new Vector2(0, grosor));
+            Lado(marco.transform, c, new Vector2(0, 0), new Vector2(0, 1), new Vector2(0, 0.5f), new Vector2(grosor, 0));
+            Lado(marco.transform, c, new Vector2(1, 0), new Vector2(1, 1), new Vector2(1, 0.5f), new Vector2(grosor, 0));
+        }
+
+        static void Lado(Transform padre, Color c, Vector2 anMin, Vector2 anMax, Vector2 pivote, Vector2 tam)
+        {
+            var go = Nodo("lado", padre);
+            var rt = go.GetComponent<RectTransform>();
+            rt.anchorMin = anMin;
+            rt.anchorMax = anMax;
+            rt.pivot = pivote;
+            rt.sizeDelta = tam;
+            rt.anchoredPosition = Vector2.zero;
+            var img = go.AddComponent<Image>();
+            img.color = c;
+            img.raycastTarget = false;
         }
 
         public static VerticalLayoutGroup Col(GameObject go, int pad = 0, int gap = 0)
