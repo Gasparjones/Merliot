@@ -21,14 +21,34 @@ namespace Merliot
     [Serializable] public class Produccion
     {
         public int vigor, temple, destreza, saber;
+        public static readonly string[] Todos = { "vigor", "temple", "destreza", "saber" };
+
         public int Get(string r) => r switch {
             "vigor" => vigor, "temple" => temple,
             "destreza" => destreza, "saber" => saber, _ => 0 };
+
+        public void Set(string r, int v)
+        {
+            switch (r) {
+                case "vigor": vigor = v; break;
+                case "temple": temple = v; break;
+                case "destreza": destreza = v; break;
+                case "saber": saber = v; break;
+            }
+        }
+
+        public void Sumar(string r, int v) => Set(r, Get(r) + v);
+        public void Vaciar() { vigor = temple = destreza = saber = 0; }
+        public Produccion Copia() => new Produccion { vigor = vigor, temple = temple, destreza = destreza, saber = saber };
         public int Total => vigor + temple + destreza + saber;
     }
 
+    /// Dos vocabularios en una sola clave del JSON: lo que te hace el enemigo
+    /// (dmg*, rotar, descartar, brota) y lo que hace una carta de uso
+    /// (robar, dar, nido, resolver, revivir, tresdados, huir). 'cura' es de los dos.
     [Serializable] public class Efecto
     {
+        // lado enemigo
         public int dmg;         // al de adelante
         public int dmgTodos;    // a cada uno
         public int dmgFondo;    // al ultimo de la fila
@@ -37,6 +57,15 @@ namespace Merliot
         public int descartar;
         public int brota;       // larga un efimero
         public int cura;
+
+        // cartas de uso
+        public int robar;       // robas n cartas
+        public Produccion dar;  // te da recursos de una
+        public int nido;        // empuja n sobre el primer lugar abierto
+        public int resolver;    // resuelve un efimero sin pagarlo
+        public int revivir;     // trae un caido del cementerio a la mano
+        public int tresdados;   // el proximo turno tiras tres y descartas el menor
+        public int huir;        // te vas de un efimero sin resolverlo
     }
 
     [Serializable] public class AlCaer { public int cris; public int curaTodos; }
@@ -53,6 +82,7 @@ namespace Merliot
         public AlCaer alCaer;
         public string pasiva;             // solo tipo amuleto: dobles | barato | escudo
         public string efectoTexto;
+        public Efecto efecto;             // solo tipo uso
         public List<Banda> bandas;
     }
 
