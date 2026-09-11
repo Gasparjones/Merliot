@@ -2,6 +2,17 @@
 
 Esto es para arrancar de cero en una máquina nueva. Son cuatro pasos y un rato de espera.
 
+## 0. Antes que nada
+
+El repo es **privado**. Gaspar te tiene que agregar como colaborador y te llega una
+invitación por mail: aceptala antes de intentar clonar, o el `git clone` te va a decir
+que el repositorio no existe.
+
+Vas a necesitar además una **clave SSH** tuya cargada en tu cuenta de GitHub. Si nunca
+armaste una: `ssh-keygen -t ed25519`, y después pegás el contenido de
+`~/.ssh/id_ed25519.pub` en <https://github.com/settings/keys>. Para probar que quedó:
+`ssh -T git@github.com` tiene que saludarte por tu nombre de usuario.
+
 ## 1. Instalar lo necesario
 
 - **Git LFS.** El arte no viaja por Git común. Sin esto te bajás archivos de texto
@@ -19,8 +30,8 @@ Esto es para arrancar de cero en una máquina nueva. Son cuatro pasos y un rato 
 ## 2. Clonar
 
 ```bash
-git clone git@github.com:USUARIO/merliot.git
-cd merliot
+git clone git@github.com:Gasparjones/Merliot.git
+cd Merliot
 git lfs pull
 ```
 
